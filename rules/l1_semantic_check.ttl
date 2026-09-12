@@ -1,0 +1,69 @@
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix bot:   <https://w3id.org/bot#> .
+@prefix props: <http://mythesis.org/props/> .
+@prefix bldg:  <http://mythesis.org/bldg/> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+# 基础语义与功能完整性
+# 【规范 2.2.5】套型必须包含卧室、起居室、厨房和卫生间
+bldg:SuiteCompletenessShape
+    a              sh:NodeShape ;
+    sh:targetClass bldg:Suite ;
+    sh:property    [ sh:path                bot:hasSpace ;
+                     sh:qualifiedValueShape [ sh:class bldg:Bedroom ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 2.2.5】该套型缺少基本空间：卧室" ] ;
+    sh:property    [ sh:path                bot:hasSpace ;
+                     sh:qualifiedValueShape [ sh:class bldg:LivingRoom ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 2.2.5】该套型缺少基本空间：起居室" ] ;
+    sh:property    [ sh:path                bot:hasSpace ;
+                     sh:qualifiedValueShape [ sh:class bldg:Kitchen ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 2.2.5】该套型缺少基本空间：厨房" ] ;
+    sh:property    [ sh:path                bot:hasSpace ;
+                     sh:qualifiedValueShape [ sh:class bldg:Bathroom ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 2.2.5】该套型缺少基本空间：卫生间" ];
+    sh:property    [ sh:path                bot:hasSpace ;
+                     sh:qualifiedValueShape [ sh:class bldg:Entrance ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 2.2.5】该套型缺少基本空间：玄关" ] .
+
+# 【规范 4.1.5】厨房设施检查 (洗涤池、灶具)
+bldg:KitchenFacilityShape
+    a              sh:NodeShape ;
+    sh:targetClass bldg:Kitchen ;
+    sh:property    [ sh:path                bot:containsElement ;
+                     sh:qualifiedValueShape [ sh:property [ sh:path     rdfs:label ;
+                                                            sh:hasValue "sink" ] ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 4.1.5】厨房缺少洗涤池(sink)" ] ;
+    sh:property    [ sh:path                bot:containsElement ;
+                     sh:qualifiedValueShape [ sh:property [ sh:path     rdfs:label ;
+                                                            sh:hasValue "gas stove" ] ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 4.1.5】厨房缺少灶具(gas stove)" ] .
+
+# 【规范 4.1.6 & 4.1.8】卫生间三件套及扶手检查
+bldg:BathroomFacilityShape
+    a              sh:NodeShape ;
+    sh:targetClass bldg:Bathroom ;
+    sh:property    [ sh:path                bot:containsElement ;
+                     sh:qualifiedValueShape [ sh:property [ sh:path     rdfs:label ;
+                                                            sh:in   ( "toilet" "squat toilet" ) ] ] ;
+
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 4.1.6】卫生间缺少便器" ] ;
+    sh:property    [ sh:path                bot:containsElement ;
+                     sh:qualifiedValueShape [ sh:property [ sh:path     rdfs:label ;
+                                                            sh:in   ( "bath" "bath tub" ) ] ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 4.1.6】卫生间缺少洗浴器" ] ;
+
+    sh:property    [ sh:path                bot:containsElement ;
+                     sh:qualifiedValueShape [ sh:property [ sh:path     rdfs:label ;
+                                                            sh:hasValue "sink" ] ] ;
+                     sh:qualifiedMinCount   1 ;
+                     sh:message             "【违规 4.1.6】卫生间缺少洗面器" ] .
+
