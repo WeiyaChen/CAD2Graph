@@ -9,7 +9,10 @@ __pycache__/
 # Distribution / packaging
 .Python
 output/
+# 排除生成的可视化图（其实它们本来就在被忽略的 output/ 下）。
+# 但这条通配会误伤手工素材，所以下面把 img/ 放行回来 —— index.html 的 logo 用的就是它。
 *.png
+!img/*.png
 build/
 develop-eggs/
 dist/
@@ -62,10 +65,18 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# === SAGE-E baseline 的派生数据 ===
-# RoomGraph 的 numpy 转储（由 scripts/export_roomgraph.py 从 submodule 生成，
-# 秒级可重建，不入库）；权重的 .npz 同理（scripts/train_sagee.py --export-weights）
-data/
+# === SAGE-E / VecFloorSeg 的权重与派生数据 ===
+# data/ 整体入库：89 个文件合计只有 ~1.7 MB
+#   ├── sagee_gtc.npz / .labels.json / .meta.json     部署模型（三件套必须一起走）
+#   ├── cad2graph_sagee_gtc.npz / .labels.json / .graphs.json   训练集
+#   ├── holdout_gtc/fold_1..5.*                        5 折留出模型
+#   └── *_cv.json / *.graphs.json / *.meta.json         评估产物与配方戳
+#
+# 唯一排除的是训练好的大体积 checkpoint：VecFloorSeg 那个约 316 MB。
+# 它**无法重新生成**（是上游训练好的权重转换来的），所以单独用 GitHub Release
+# 或 git-lfs 分发，README 里给下载方式。用通配而不是写死文件名，
+# 免得以后换个 ckpt 名字又悄悄混进仓库。
+*.ckpt
 # 训练产物（与 third_party/VecFloorSeg 的 results/ 一致）
 results/
 

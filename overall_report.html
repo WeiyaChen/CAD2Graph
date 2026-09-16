@@ -211,6 +211,7 @@
     const extra = Object.keys(t1).filter(k => order.indexOf(k) < 0);   // GT(自检)
     const all = order.concat(extra);
     if (!all.length) { document.getElementById('t1Table').innerHTML = '<div class="empty">没有任务 1 产物</div>'; return; }
+    const full = Math.max.apply(null, all.map(m => t1[m].n_drawings || 0).concat([0]));
     const cols = [
       ['系统数', m => t1[m].aggregate.n_sys, null, 'int'],
       ['数量比', m => t1[m].aggregate.count_ratio, null],
@@ -222,12 +223,14 @@
     const flags = cols.map(c => bestFlags(order.map(m => c[1](m)), c[2]));
     const fmt = (c, v) => c[3] === 'int' ? String(v)
                        : (c[0].indexOf('MAE') >= 0 ? fix(v, 2) : fix(v, 3));
-    let h = '<table class="tbl"><thead><tr><th>轮廓算法</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    let h = '<table class="tbl"><thead><tr><th>轮廓算法</th><th>图纸</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
     all.forEach(m => {
       const ref = order.indexOf(m);
-      h += '<tr><td>' + esc(m) + (ref < 0 ? '（参照，不参评）' : '') + '</td>'
+      const partial = (t1[m].n_drawings || 0) < full;
+      h += '<tr' + (partial ? ' class="partial"' : '') + '><td>' + esc(m) + (ref < 0 ? '（参照，不参评）' : '') + '</td>'
+        + '<td class="' + (partial ? '' : 'dim') + '">' + (t1[m].n_drawings || 0) + '/' + full + '</td>'
         + cols.map((c, j) => {
-          const cls = ref < 0 ? 'dim' : (c[2] && flags[j][ref] ? 'best' : (c[2] === null ? 'dim' : ''));
+          const cls = ref < 0 ? 'dim' : (c[2] && flags[j][ref] && !partial ? 'best' : (c[2] === null ? 'dim' : ''));
           return '<td class="' + cls + '">' + fmt(c, c[1](m)) + '</td>';
         }).join('') + '</tr>';
     });
@@ -238,6 +241,7 @@
   function renderTask2(t2) {
     const order = CLF_ORDER.filter(c => t2[c]);
     if (!order.length) { document.getElementById('t2Table').innerHTML = '<div class="empty">没有任务 2 产物</div>'; return; }
+    const full = Math.max.apply(null, order.map(m => t2[m].n_drawings || 0).concat([0]));
     const cols = [
       ['GT 空间', m => t2[m].aggregate.n_gt, null],
       ['准确率', m => t2[m].aggregate.accuracy, 'max'],
@@ -246,16 +250,20 @@
       ['WeightedF1', m => t2[m].aggregate.weighted_f1, 'max'],
     ];
     const flags = cols.map(c => bestFlags(order.map(m => c[1](m)), c[2]));
-    let h = '<table class="tbl"><thead><tr><th>分类器</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    let h = '<table class="tbl"><thead><tr><th>分类器</th><th>图纸</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
     order.forEach((m, i) => {
-      h += '<tr><td>' + esc(m) + '</td>' + cols.map((c, j) => {
-        const v = c[1](m);
-        const cls = c[2] && flags[j][i] ? 'best' : (c[2] === null ? 'dim' : '');
-        const disp = c[2] === null ? v : pct(v);
-        return '<td class="' + cls + '">' + disp + '</td>';
-      }).join('') + '</tr>';
+      const partial = (t2[m].n_drawings || 0) < full;
+      h += '<tr' + (partial ? ' class="partial"' : '') + '><td>' + esc(m) + '</td>'
+        + '<td class="' + (partial ? '' : 'dim') + '">' + (t2[m].n_drawings || 0) + '/' + full + '</td>'
+        + cols.map((c, j) => {
+          const v = c[1](m);
+          const cls = c[2] && flags[j][i] && !partial ? 'best' : (c[2] === null ? 'dim' : '');
+          const disp = c[2] === null ? v : pct(v);
+          return '<td class="' + cls + '">' + disp + '</td>';
+        }).join('') + '</tr>';
     });
     h += '</tbody></table>';
+    h += '<div class="hint" style="margin-top:10px">黄底行 = 那一组还没跑完，百分比不可与其它行直接比。</div>';
     document.getElementById('t2Table').innerHTML = h;
   }
 

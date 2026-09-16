@@ -1,0 +1,31 @@
+# 行尾策略 —— 写进仓库本身，不依赖任何人的本地 core.autocrlf。
+#
+# 背景：本仓库原先只在**系统级** gitconfig（Windows 上由 Git for Windows 安装器写入
+# D:/Program Files/Git/etc/gitconfig）设了 core.autocrlf=true，而**没有用户级
+# ~/.gitconfig**。读不到系统级配置的客户端（某些 GUI / 编辑器内置 git）就会拿
+# CRLF 工作区去比 LF 的 index，把大批文件误报成「已修改」。
+#
+# 这里显式声明后，判断不再依赖本地配置：
+#   - 仓库里一律存 LF；
+#   - 检出时也保持 LF；
+#   - 比较工作区时会先归一化，所以不会再有 CRLF/LF 造成的假修改。
+* text=auto eol=lf
+
+# Windows 脚本保留 CRLF —— 部分老版本 PowerShell / cmd 对 LF 结尾的脚本处理不佳
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# 二进制：禁止任何行尾转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.npz   binary
+*.ckpt  binary
+*.pt    binary
+*.pkl   binary
+*.zip   binary
+*.pdf   binary
