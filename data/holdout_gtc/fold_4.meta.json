@@ -1,0 +1,13 @@
+{
+  "recipe": "faithful",
+  "normalize": false,
+  "class_weights": false,
+  "epochs": 200,
+  "lr": 0.005,
+  "weight_decay": 0.0005,
+  "dropout": 0.2,
+  "seed": 42,
+  "n_class": 16,
+  "dim_node": 8,
+  "dim_edge": 5
+}

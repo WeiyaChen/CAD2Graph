@@ -1,0 +1,12 @@
+{
+  "0.0": {
+    "dir": "D:\\Dev\\BIM\\CAD2Graph\\output\\holdout_thr000",
+    "n_ok": 39,
+    "failed": []
+  },
+  "0.5": {
+    "dir": "D:\\Dev\\BIM\\CAD2Graph\\output\\holdout_thr050",
+    "n_ok": 39,
+    "failed": []
+  }
+}

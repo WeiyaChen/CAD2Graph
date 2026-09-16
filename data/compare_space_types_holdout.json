@@ -1,0 +1,3178 @@
+[
+  {
+    "run": "holdout_thr000",
+    "n_drawings": 39,
+    "n_sys_spaces": 1529,
+    "n_matched": 1411,
+    "n_counted": 1404,
+    "n_labeled": 1404,
+    "correct": 755,
+    "accuracy": 0.5377492877492878,
+    "coverage": 1.0,
+    "macro_f1": 0.3750061474982481,
+    "weighted_f1": 0.5396271858545947,
+    "classes": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom"
+    ],
+    "preds": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom",
+      "<未判定>",
+      "<空间外>"
+    ],
+    "name": "SAGEE",
+    "f1_by_class": [
+      0.4512820512820513,
+      0.5319148936170213,
+      0.7197452229299363,
+      0.12903225806451613,
+      0.547945205479452,
+      0.1724137931034483,
+      0.6545454545454545,
+      0.18181818181818182,
+      0.05714285714285714,
+      0.44715447154471544,
+      0.6986301369863014,
+      0.5384615384615384,
+      0.0,
+      0.12
+    ],
+    "confusion": {
+      "classes": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom"
+      ],
+      "preds": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom",
+        "<未判定>",
+        "<空间外>"
+      ],
+      "matrix": [
+        [
+          132,
+          13,
+          7,
+          2,
+          9,
+          1,
+          2,
+          1,
+          8,
+          6,
+          4,
+          10,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          35,
+          75,
+          2,
+          4,
+          4,
+          2,
+          0,
+          0,
+          1,
+          23,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          38,
+          8,
+          226,
+          1,
+          5,
+          4,
+          1,
+          0,
+          10,
+          5,
+          42,
+          2,
+          0,
+          11,
+          0,
+          0
+        ],
+        [
+          3,
+          4,
+          0,
+          2,
+          5,
+          0,
+          1,
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          45,
+          4,
+          1,
+          2,
+          80,
+          2,
+          0,
+          1,
+          6,
+          4,
+          1,
+          19,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          15,
+          2,
+          3,
+          0,
+          7,
+          5,
+          0,
+          1,
+          0,
+          2,
+          3,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          23,
+          3,
+          0,
+          1,
+          0,
+          0,
+          36,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          9,
+          0,
+          1,
+          0,
+          3,
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          18,
+          0,
+          3,
+          0,
+          2,
+          1,
+          2,
+          0,
+          2,
+          3,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          45,
+          21,
+          6,
+          1,
+          3,
+          0,
+          2,
+          0,
+          0,
+          55,
+          1,
+          2,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          6,
+          0,
+          16,
+          0,
+          2,
+          2,
+          0,
+          0,
+          1,
+          2,
+          102,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          1,
+          0,
+          7,
+          0,
+          0,
+          0,
+          3,
+          1,
+          2,
+          35,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          5,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          7,
+          0,
+          9,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          5,
+          2,
+          1,
+          0,
+          3,
+          0,
+          0
+        ]
+      ]
+    },
+    "pairs": [
+      {
+        "gt": "Bedroom",
+        "pred": "Bedroom",
+        "n": 226
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Balcony",
+        "n": 132
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "LivingRoom",
+        "n": 102
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Corridor",
+        "n": 80
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Bathroom",
+        "n": 75
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Kitchen",
+        "n": 55
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Balcony",
+        "n": 45
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Balcony",
+        "n": 45
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "LivingRoom",
+        "n": 42
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Balcony",
+        "n": 38
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "ElevatorShaft",
+        "n": 36
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Stairwell",
+        "n": 35
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Balcony",
+        "n": 35
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Balcony",
+        "n": 23
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Kitchen",
+        "n": 23
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Bathroom",
+        "n": 21
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Stairwell",
+        "n": 19
+      },
+      {
+        "gt": "Garden",
+        "pred": "Balcony",
+        "n": 18
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Bedroom",
+        "n": 16
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Balcony",
+        "n": 15
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Bathroom",
+        "n": 13
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "StudyRoom",
+        "n": 11
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Stairwell",
+        "n": 10
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Garden",
+        "n": 10
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Bedroom",
+        "n": 9
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Balcony",
+        "n": 9
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Corridor",
+        "n": 9
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Balcony",
+        "n": 8
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Bathroom",
+        "n": 8
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Garden",
+        "n": 8
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Corridor",
+        "n": 7
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Corridor",
+        "n": 7
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Bedroom",
+        "n": 7
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Balcony",
+        "n": 7
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Garden",
+        "n": 6
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Bedroom",
+        "n": 6
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Kitchen",
+        "n": 6
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Balcony",
+        "n": 6
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "DiningRoom",
+        "n": 5
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Kitchen",
+        "n": 5
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Kitchen",
+        "n": 5
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Balcony",
+        "n": 5
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Cloakroom",
+        "n": 4
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Bathroom",
+        "n": 4
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "DiningRoom",
+        "n": 4
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Bathroom",
+        "n": 4
+      },
+      {
+        "gt": "Balcony",
+        "pred": "LivingRoom",
+        "n": 4
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Kitchen",
+        "n": 4
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Corridor",
+        "n": 4
+      },
+      {
+        "gt": "Garden",
+        "pred": "Stairwell",
+        "n": 3
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Garden",
+        "n": 3
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Bathroom",
+        "n": 3
+      },
+      {
+        "gt": "Garden",
+        "pred": "Bedroom",
+        "n": 3
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Bathroom",
+        "n": 3
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "LivingRoom",
+        "n": 3
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Balcony",
+        "n": 3
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Garden",
+        "n": 3
+      },
+      {
+        "gt": "Garden",
+        "pred": "Kitchen",
+        "n": 3
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "StudyRoom",
+        "n": 3
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Corridor",
+        "n": 3
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Bedroom",
+        "n": 3
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Corridor",
+        "n": 3
+      },
+      {
+        "gt": "Balcony",
+        "pred": "ElevatorShaft",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "DiningRoom",
+        "n": 2
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Cloakroom",
+        "n": 2
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Stairwell",
+        "n": 2
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Kitchen",
+        "n": 2
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "LivingRoom",
+        "n": 2
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "LivingRoom",
+        "n": 2
+      },
+      {
+        "gt": "Corridor",
+        "pred": "DiningRoom",
+        "n": 2
+      },
+      {
+        "gt": "Garden",
+        "pred": "Garden",
+        "n": 2
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Bedroom",
+        "n": 2
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Bathroom",
+        "n": 2
+      },
+      {
+        "gt": "Garden",
+        "pred": "Corridor",
+        "n": 2
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Cloakroom",
+        "n": 2
+      },
+      {
+        "gt": "Garden",
+        "pred": "ElevatorShaft",
+        "n": 2
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Cloakroom",
+        "n": 2
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "DiningRoom",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Kitchen",
+        "n": 2
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "ElevatorShaft",
+        "n": 2
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Entrance",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Corridor",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Kitchen",
+        "n": 2
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Stairwell",
+        "n": 2
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Entrance",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Stairwell",
+        "n": 1
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "ElevatorShaft",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Stairwell",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Entrance",
+        "n": 1
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "Balcony",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Garden",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Entrance",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Entrance",
+        "n": 1
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Entrance",
+        "n": 1
+      },
+      {
+        "gt": "Balcony",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "ElevatorShaft",
+        "n": 1
+      }
+    ],
+    "per_drawing": [
+      {
+        "key": "2suite#1",
+        "n_sys": 35,
+        "n_counted": 33,
+        "correct": 24
+      },
+      {
+        "key": "2suite#10",
+        "n_sys": 17,
+        "n_counted": 17,
+        "correct": 11
+      },
+      {
+        "key": "2suite#2",
+        "n_sys": 32,
+        "n_counted": 32,
+        "correct": 13
+      },
+      {
+        "key": "2suite#3",
+        "n_sys": 36,
+        "n_counted": 27,
+        "correct": 15
+      },
+      {
+        "key": "2suite#4",
+        "n_sys": 29,
+        "n_counted": 27,
+        "correct": 8
+      },
+      {
+        "key": "2suite#5",
+        "n_sys": 35,
+        "n_counted": 34,
+        "correct": 11
+      },
+      {
+        "key": "2suite#6",
+        "n_sys": 29,
+        "n_counted": 29,
+        "correct": 16
+      },
+      {
+        "key": "2suite#7",
+        "n_sys": 26,
+        "n_counted": 26,
+        "correct": 12
+      },
+      {
+        "key": "2suite#8",
+        "n_sys": 28,
+        "n_counted": 27,
+        "correct": 18
+      },
+      {
+        "key": "2suite#9",
+        "n_sys": 36,
+        "n_counted": 35,
+        "correct": 10
+      },
+      {
+        "key": "3suite#1",
+        "n_sys": 41,
+        "n_counted": 39,
+        "correct": 23
+      },
+      {
+        "key": "3suite#10",
+        "n_sys": 39,
+        "n_counted": 38,
+        "correct": 15
+      },
+      {
+        "key": "3suite#2",
+        "n_sys": 33,
+        "n_counted": 33,
+        "correct": 20
+      },
+      {
+        "key": "3suite#3",
+        "n_sys": 41,
+        "n_counted": 39,
+        "correct": 28
+      },
+      {
+        "key": "3suite#4",
+        "n_sys": 45,
+        "n_counted": 43,
+        "correct": 27
+      },
+      {
+        "key": "3suite#5",
+        "n_sys": 33,
+        "n_counted": 33,
+        "correct": 17
+      },
+      {
+        "key": "3suite#6",
+        "n_sys": 40,
+        "n_counted": 38,
+        "correct": 23
+      },
+      {
+        "key": "3suite#7",
+        "n_sys": 35,
+        "n_counted": 35,
+        "correct": 23
+      },
+      {
+        "key": "3suite#8",
+        "n_sys": 41,
+        "n_counted": 40,
+        "correct": 26
+      },
+      {
+        "key": "3suite#9",
+        "n_sys": 32,
+        "n_counted": 32,
+        "correct": 13
+      },
+      {
+        "key": "4suite#1",
+        "n_sys": 58,
+        "n_counted": 54,
+        "correct": 19
+      },
+      {
+        "key": "4suite#10",
+        "n_sys": 14,
+        "n_counted": 13,
+        "correct": 10
+      },
+      {
+        "key": "4suite#2",
+        "n_sys": 47,
+        "n_counted": 44,
+        "correct": 24
+      },
+      {
+        "key": "4suite#3",
+        "n_sys": 50,
+        "n_counted": 49,
+        "correct": 22
+      },
+      {
+        "key": "4suite#4",
+        "n_sys": 42,
+        "n_counted": 38,
+        "correct": 30
+      },
+      {
+        "key": "4suite#5",
+        "n_sys": 49,
+        "n_counted": 44,
+        "correct": 20
+      },
+      {
+        "key": "4suite#6",
+        "n_sys": 44,
+        "n_counted": 38,
+        "correct": 26
+      },
+      {
+        "key": "4suite#7",
+        "n_sys": 34,
+        "n_counted": 33,
+        "correct": 22
+      },
+      {
+        "key": "4suite#8",
+        "n_sys": 38,
+        "n_counted": 34,
+        "correct": 24
+      },
+      {
+        "key": "4suite#9",
+        "n_sys": 44,
+        "n_counted": 40,
+        "correct": 14
+      },
+      {
+        "key": "6suite#1",
+        "n_sys": 77,
+        "n_counted": 63,
+        "correct": 32
+      },
+      {
+        "key": "6suite#10",
+        "n_sys": 54,
+        "n_counted": 52,
+        "correct": 24
+      },
+      {
+        "key": "6suite#2",
+        "n_sys": 55,
+        "n_counted": 52,
+        "correct": 30
+      },
+      {
+        "key": "6suite#3",
+        "n_sys": 46,
+        "n_counted": 27,
+        "correct": 4
+      },
+      {
+        "key": "6suite#4",
+        "n_sys": 18,
+        "n_counted": 7,
+        "correct": 0
+      },
+      {
+        "key": "6suite#6",
+        "n_sys": 12,
+        "n_counted": 12,
+        "correct": 8
+      },
+      {
+        "key": "6suite#7",
+        "n_sys": 79,
+        "n_counted": 73,
+        "correct": 30
+      },
+      {
+        "key": "6suite#8",
+        "n_sys": 43,
+        "n_counted": 41,
+        "correct": 31
+      },
+      {
+        "key": "6suite#9",
+        "n_sys": 42,
+        "n_counted": 40,
+        "correct": 32
+      }
+    ]
+  },
+  {
+    "run": "holdout_thr050",
+    "n_drawings": 39,
+    "n_sys_spaces": 1529,
+    "n_matched": 1411,
+    "n_counted": 1404,
+    "n_labeled": 925,
+    "correct": 632,
+    "accuracy": 0.45014245014245013,
+    "coverage": 0.6588319088319088,
+    "macro_f1": 0.3691507627921946,
+    "weighted_f1": 0.5320004234289352,
+    "classes": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom"
+    ],
+    "preds": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom",
+      "<未判定>",
+      "<空间外>"
+    ],
+    "name": "SAGEE_thr50",
+    "f1_by_class": [
+      0.5842696629213483,
+      0.4473684210526316,
+      0.65,
+      0.08695652173913043,
+      0.5468164794007491,
+      0.18518518518518517,
+      0.6470588235294118,
+      0.2222222222222222,
+      0.0,
+      0.44933920704845814,
+      0.7232472324723247,
+      0.5405405405405406,
+      0.0,
+      0.0851063829787234
+    ],
+    "confusion": {
+      "classes": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom"
+      ],
+      "preds": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom",
+        "<未判定>",
+        "<空间外>"
+      ],
+      "matrix": [
+        [
+          104,
+          3,
+          4,
+          1,
+          5,
+          1,
+          1,
+          0,
+          6,
+          6,
+          4,
+          6,
+          0,
+          0,
+          55,
+          0
+        ],
+        [
+          7,
+          51,
+          0,
+          2,
+          3,
+          1,
+          0,
+          0,
+          0,
+          18,
+          1,
+          0,
+          0,
+          1,
+          65,
+          0
+        ],
+        [
+          10,
+          5,
+          182,
+          0,
+          4,
+          3,
+          0,
+          0,
+          5,
+          3,
+          32,
+          0,
+          0,
+          11,
+          98,
+          0
+        ],
+        [
+          0,
+          3,
+          0,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          11,
+          0
+        ],
+        [
+          11,
+          0,
+          0,
+          1,
+          73,
+          1,
+          0,
+          0,
+          4,
+          2,
+          0,
+          15,
+          0,
+          0,
+          58,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0,
+          5,
+          5,
+          0,
+          0,
+          0,
+          1,
+          2,
+          0,
+          0,
+          1,
+          23,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          33,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          30,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          21,
+          0
+        ],
+        [
+          14,
+          13,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          51,
+          1,
+          0,
+          0,
+          1,
+          55,
+          0
+        ],
+        [
+          2,
+          0,
+          12,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          98,
+          1,
+          0,
+          2,
+          15,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          30,
+          0,
+          0,
+          18,
+          0
+        ],
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          7,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          5,
+          0,
+          1,
+          0,
+          2,
+          12,
+          0
+        ]
+      ]
+    },
+    "pairs": [
+      {
+        "gt": "Bedroom",
+        "pred": "Bedroom",
+        "n": 182
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Balcony",
+        "n": 104
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "LivingRoom",
+        "n": 98
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "<未判定>",
+        "n": 98
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Corridor",
+        "n": 73
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "<未判定>",
+        "n": 65
+      },
+      {
+        "gt": "Corridor",
+        "pred": "<未判定>",
+        "n": 58
+      },
+      {
+        "gt": "Balcony",
+        "pred": "<未判定>",
+        "n": 55
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "<未判定>",
+        "n": 55
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Kitchen",
+        "n": 51
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Bathroom",
+        "n": 51
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "ElevatorShaft",
+        "n": 33
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "LivingRoom",
+        "n": 32
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Stairwell",
+        "n": 30
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "<未判定>",
+        "n": 30
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "<未判定>",
+        "n": 23
+      },
+      {
+        "gt": "Garden",
+        "pred": "<未判定>",
+        "n": 21
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "<未判定>",
+        "n": 18
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Kitchen",
+        "n": 18
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Stairwell",
+        "n": 15
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "<未判定>",
+        "n": 15
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Balcony",
+        "n": 14
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Bathroom",
+        "n": 13
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "<未判定>",
+        "n": 12
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Bedroom",
+        "n": 12
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Balcony",
+        "n": 11
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "<未判定>",
+        "n": 11
+      },
+      {
+        "gt": "Entrance",
+        "pred": "<未判定>",
+        "n": 11
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "StudyRoom",
+        "n": 11
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Balcony",
+        "n": 10
+      },
+      {
+        "gt": "Garden",
+        "pred": "Balcony",
+        "n": 8
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Bedroom",
+        "n": 7
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "<未判定>",
+        "n": 7
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Balcony",
+        "n": 7
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Stairwell",
+        "n": 6
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Garden",
+        "n": 6
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Kitchen",
+        "n": 6
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Corridor",
+        "n": 6
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "DiningRoom",
+        "n": 5
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Bathroom",
+        "n": 5
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Kitchen",
+        "n": 5
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Garden",
+        "n": 5
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "Balcony",
+        "pred": "LivingRoom",
+        "n": 4
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Garden",
+        "n": 4
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Bedroom",
+        "n": 4
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Corridor",
+        "n": 4
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Bathroom",
+        "n": 3
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Bathroom",
+        "n": 3
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Kitchen",
+        "n": 3
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "DiningRoom",
+        "n": 3
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Corridor",
+        "n": 3
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Cloakroom",
+        "n": 2
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Corridor",
+        "n": 2
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Bathroom",
+        "n": 2
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "LivingRoom",
+        "n": 2
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Balcony",
+        "n": 2
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Corridor",
+        "n": 2
+      },
+      {
+        "gt": "Garden",
+        "pred": "ElevatorShaft",
+        "n": 2
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Kitchen",
+        "n": 2
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Entrance",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Balcony",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "Balcony",
+        "pred": "ElevatorShaft",
+        "n": 1
+      },
+      {
+        "gt": "Garden",
+        "pred": "Stairwell",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Bathroom",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Stairwell",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Stairwell",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Bathroom",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Balcony",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "Balcony",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Garden",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Entrance",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Garden",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Corridor",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Corridor",
+        "n": 1
+      },
+      {
+        "gt": "Garden",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "Balcony",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Kitchen",
+        "n": 1
+      }
+    ],
+    "per_drawing": [
+      {
+        "key": "2suite#1",
+        "n_sys": 35,
+        "n_counted": 33,
+        "correct": 21
+      },
+      {
+        "key": "2suite#10",
+        "n_sys": 17,
+        "n_counted": 17,
+        "correct": 11
+      },
+      {
+        "key": "2suite#2",
+        "n_sys": 32,
+        "n_counted": 32,
+        "correct": 6
+      },
+      {
+        "key": "2suite#3",
+        "n_sys": 36,
+        "n_counted": 27,
+        "correct": 12
+      },
+      {
+        "key": "2suite#4",
+        "n_sys": 29,
+        "n_counted": 27,
+        "correct": 5
+      },
+      {
+        "key": "2suite#5",
+        "n_sys": 35,
+        "n_counted": 34,
+        "correct": 5
+      },
+      {
+        "key": "2suite#6",
+        "n_sys": 29,
+        "n_counted": 29,
+        "correct": 12
+      },
+      {
+        "key": "2suite#7",
+        "n_sys": 26,
+        "n_counted": 26,
+        "correct": 11
+      },
+      {
+        "key": "2suite#8",
+        "n_sys": 28,
+        "n_counted": 27,
+        "correct": 14
+      },
+      {
+        "key": "2suite#9",
+        "n_sys": 36,
+        "n_counted": 35,
+        "correct": 7
+      },
+      {
+        "key": "3suite#1",
+        "n_sys": 41,
+        "n_counted": 39,
+        "correct": 20
+      },
+      {
+        "key": "3suite#10",
+        "n_sys": 39,
+        "n_counted": 38,
+        "correct": 11
+      },
+      {
+        "key": "3suite#2",
+        "n_sys": 33,
+        "n_counted": 33,
+        "correct": 16
+      },
+      {
+        "key": "3suite#3",
+        "n_sys": 41,
+        "n_counted": 39,
+        "correct": 26
+      },
+      {
+        "key": "3suite#4",
+        "n_sys": 45,
+        "n_counted": 43,
+        "correct": 25
+      },
+      {
+        "key": "3suite#5",
+        "n_sys": 33,
+        "n_counted": 33,
+        "correct": 13
+      },
+      {
+        "key": "3suite#6",
+        "n_sys": 40,
+        "n_counted": 38,
+        "correct": 21
+      },
+      {
+        "key": "3suite#7",
+        "n_sys": 35,
+        "n_counted": 35,
+        "correct": 25
+      },
+      {
+        "key": "3suite#8",
+        "n_sys": 41,
+        "n_counted": 40,
+        "correct": 24
+      },
+      {
+        "key": "3suite#9",
+        "n_sys": 32,
+        "n_counted": 32,
+        "correct": 12
+      },
+      {
+        "key": "4suite#1",
+        "n_sys": 58,
+        "n_counted": 54,
+        "correct": 13
+      },
+      {
+        "key": "4suite#10",
+        "n_sys": 14,
+        "n_counted": 13,
+        "correct": 10
+      },
+      {
+        "key": "4suite#2",
+        "n_sys": 47,
+        "n_counted": 44,
+        "correct": 21
+      },
+      {
+        "key": "4suite#3",
+        "n_sys": 50,
+        "n_counted": 49,
+        "correct": 17
+      },
+      {
+        "key": "4suite#4",
+        "n_sys": 42,
+        "n_counted": 38,
+        "correct": 29
+      },
+      {
+        "key": "4suite#5",
+        "n_sys": 49,
+        "n_counted": 44,
+        "correct": 19
+      },
+      {
+        "key": "4suite#6",
+        "n_sys": 44,
+        "n_counted": 38,
+        "correct": 23
+      },
+      {
+        "key": "4suite#7",
+        "n_sys": 34,
+        "n_counted": 33,
+        "correct": 20
+      },
+      {
+        "key": "4suite#8",
+        "n_sys": 38,
+        "n_counted": 34,
+        "correct": 18
+      },
+      {
+        "key": "4suite#9",
+        "n_sys": 44,
+        "n_counted": 40,
+        "correct": 11
+      },
+      {
+        "key": "6suite#1",
+        "n_sys": 77,
+        "n_counted": 63,
+        "correct": 20
+      },
+      {
+        "key": "6suite#10",
+        "n_sys": 54,
+        "n_counted": 52,
+        "correct": 24
+      },
+      {
+        "key": "6suite#2",
+        "n_sys": 55,
+        "n_counted": 52,
+        "correct": 26
+      },
+      {
+        "key": "6suite#3",
+        "n_sys": 46,
+        "n_counted": 27,
+        "correct": 4
+      },
+      {
+        "key": "6suite#4",
+        "n_sys": 18,
+        "n_counted": 7,
+        "correct": 0
+      },
+      {
+        "key": "6suite#6",
+        "n_sys": 12,
+        "n_counted": 12,
+        "correct": 8
+      },
+      {
+        "key": "6suite#7",
+        "n_sys": 79,
+        "n_counted": 73,
+        "correct": 25
+      },
+      {
+        "key": "6suite#8",
+        "n_sys": 43,
+        "n_counted": 41,
+        "correct": 19
+      },
+      {
+        "key": "6suite#9",
+        "n_sys": 42,
+        "n_counted": 40,
+        "correct": 28
+      }
+    ]
+  },
+  {
+    "run": "jsonld_rdp",
+    "n_drawings": 39,
+    "n_sys_spaces": 1777,
+    "n_matched": 1621,
+    "n_counted": 1614,
+    "n_labeled": 868,
+    "correct": 725,
+    "accuracy": 0.44919454770755884,
+    "coverage": 0.5377942998760843,
+    "macro_f1": 0.4619789368379702,
+    "weighted_f1": 0.5483495986873224,
+    "classes": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom"
+    ],
+    "preds": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom",
+      "Cloakroom",
+      "Corridor",
+      "DiningRoom",
+      "ElevatorShaft",
+      "Entrance",
+      "Garden",
+      "Kitchen",
+      "LivingRoom",
+      "Stairwell",
+      "StorageRoom",
+      "StudyRoom",
+      "<未判定>",
+      "<空间外>"
+    ],
+    "name": "TextMatching",
+    "f1_by_class": [
+      0.8324607329842932,
+      0.2413793103448276,
+      0.6751824817518248,
+      0.7878787878787878,
+      0.34375,
+      0.6857142857142857,
+      0.0,
+      0.4230769230769231,
+      0.17391304347826086,
+      0.775,
+      0.7096774193548387,
+      0.0,
+      0.0,
+      0.819672131147541
+    ],
+    "confusion": {
+      "classes": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom"
+      ],
+      "preds": [
+        "Balcony",
+        "Bathroom",
+        "Bedroom",
+        "Cloakroom",
+        "Corridor",
+        "DiningRoom",
+        "ElevatorShaft",
+        "Entrance",
+        "Garden",
+        "Kitchen",
+        "LivingRoom",
+        "Stairwell",
+        "StorageRoom",
+        "StudyRoom",
+        "<未判定>",
+        "<空间外>"
+      ],
+      "matrix": [
+        [
+          159,
+          0,
+          0,
+          0,
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          46,
+          0
+        ],
+        [
+          1,
+          21,
+          0,
+          0,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          126,
+          0
+        ],
+        [
+          1,
+          1,
+          185,
+          1,
+          5,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          2,
+          160,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          66,
+          3,
+          2,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          159,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          11,
+          60,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          14,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          66,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          17,
+          0,
+          0,
+          11,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          5,
+          0,
+          0,
+          2,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          30,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          93,
+          0,
+          0,
+          0,
+          0,
+          43,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0,
+          26,
+          24,
+          0,
+          0,
+          0,
+          2,
+          88,
+          0,
+          0,
+          2,
+          13,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          57,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          25,
+          3,
+          0
+        ]
+      ]
+    },
+    "pairs": [
+      {
+        "gt": "Bedroom",
+        "pred": "Bedroom",
+        "n": 185
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "<未判定>",
+        "n": 160
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Balcony",
+        "n": 159
+      },
+      {
+        "gt": "Corridor",
+        "pred": "<未判定>",
+        "n": 159
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "<未判定>",
+        "n": 126
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Kitchen",
+        "n": 93
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "LivingRoom",
+        "n": 88
+      },
+      {
+        "gt": "ElevatorShaft",
+        "pred": "<未判定>",
+        "n": 66
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Corridor",
+        "n": 66
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "DiningRoom",
+        "n": 60
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "<未判定>",
+        "n": 57
+      },
+      {
+        "gt": "Balcony",
+        "pred": "<未判定>",
+        "n": 46
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "<未判定>",
+        "n": 43
+      },
+      {
+        "gt": "Garden",
+        "pred": "<未判定>",
+        "n": 30
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Corridor",
+        "n": 26
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "StudyRoom",
+        "n": 25
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "DiningRoom",
+        "n": 24
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Bathroom",
+        "n": 21
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Corridor",
+        "n": 17
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "<未判定>",
+        "n": 14
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "Cloakroom",
+        "n": 13
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "<未判定>",
+        "n": 13
+      },
+      {
+        "gt": "Balcony",
+        "pred": "Corridor",
+        "n": 12
+      },
+      {
+        "gt": "StorageRoom",
+        "pred": "<未判定>",
+        "n": 12
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "Corridor",
+        "n": 11
+      },
+      {
+        "gt": "Entrance",
+        "pred": "Entrance",
+        "n": 11
+      },
+      {
+        "gt": "Entrance",
+        "pred": "<未判定>",
+        "n": 11
+      },
+      {
+        "gt": "Cloakroom",
+        "pred": "<未判定>",
+        "n": 6
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Corridor",
+        "n": 6
+      },
+      {
+        "gt": "Garden",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Corridor",
+        "n": 5
+      },
+      {
+        "gt": "Garden",
+        "pred": "Garden",
+        "n": 4
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "<未判定>",
+        "n": 3
+      },
+      {
+        "gt": "Corridor",
+        "pred": "DiningRoom",
+        "n": 3
+      },
+      {
+        "gt": "Balcony",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "Garden",
+        "pred": "Entrance",
+        "n": 2
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Balcony",
+        "n": 2
+      },
+      {
+        "gt": "Corridor",
+        "pred": "ElevatorShaft",
+        "n": 2
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "StudyRoom",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Bedroom",
+        "n": 2
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Kitchen",
+        "n": 2
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Corridor",
+        "n": 2
+      },
+      {
+        "gt": "StudyRoom",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Cloakroom",
+        "n": 1
+      },
+      {
+        "gt": "Bathroom",
+        "pred": "Balcony",
+        "n": 1
+      },
+      {
+        "gt": "DiningRoom",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "LivingRoom",
+        "n": 1
+      },
+      {
+        "gt": "Kitchen",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "Corridor",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Kitchen",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Bathroom",
+        "n": 1
+      },
+      {
+        "gt": "LivingRoom",
+        "pred": "Bathroom",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "DiningRoom",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "StudyRoom",
+        "n": 1
+      },
+      {
+        "gt": "Garden",
+        "pred": "Bedroom",
+        "n": 1
+      },
+      {
+        "gt": "Stairwell",
+        "pred": "Corridor",
+        "n": 1
+      },
+      {
+        "gt": "Bedroom",
+        "pred": "Balcony",
+        "n": 1
+      }
+    ],
+    "per_drawing": [
+      {
+        "key": "2suite#1",
+        "n_sys": 35,
+        "n_counted": 33,
+        "correct": 17
+      },
+      {
+        "key": "2suite#10",
+        "n_sys": 17,
+        "n_counted": 17,
+        "correct": 6
+      },
+      {
+        "key": "2suite#2",
+        "n_sys": 38,
+        "n_counted": 36,
+        "correct": 16
+      },
+      {
+        "key": "2suite#3",
+        "n_sys": 42,
+        "n_counted": 33,
+        "correct": 14
+      },
+      {
+        "key": "2suite#4",
+        "n_sys": 30,
+        "n_counted": 28,
+        "correct": 4
+      },
+      {
+        "key": "2suite#5",
+        "n_sys": 37,
+        "n_counted": 36,
+        "correct": 22
+      },
+      {
+        "key": "2suite#6",
+        "n_sys": 35,
+        "n_counted": 35,
+        "correct": 24
+      },
+      {
+        "key": "2suite#7",
+        "n_sys": 30,
+        "n_counted": 30,
+        "correct": 18
+      },
+      {
+        "key": "2suite#8",
+        "n_sys": 28,
+        "n_counted": 27,
+        "correct": 14
+      },
+      {
+        "key": "2suite#9",
+        "n_sys": 37,
+        "n_counted": 36,
+        "correct": 8
+      },
+      {
+        "key": "3suite#1",
+        "n_sys": 44,
+        "n_counted": 42,
+        "correct": 27
+      },
+      {
+        "key": "3suite#10",
+        "n_sys": 44,
+        "n_counted": 43,
+        "correct": 21
+      },
+      {
+        "key": "3suite#2",
+        "n_sys": 41,
+        "n_counted": 41,
+        "correct": 22
+      },
+      {
+        "key": "3suite#3",
+        "n_sys": 43,
+        "n_counted": 41,
+        "correct": 22
+      },
+      {
+        "key": "3suite#4",
+        "n_sys": 57,
+        "n_counted": 51,
+        "correct": 26
+      },
+      {
+        "key": "3suite#5",
+        "n_sys": 36,
+        "n_counted": 36,
+        "correct": 20
+      },
+      {
+        "key": "3suite#6",
+        "n_sys": 41,
+        "n_counted": 39,
+        "correct": 26
+      },
+      {
+        "key": "3suite#7",
+        "n_sys": 41,
+        "n_counted": 41,
+        "correct": 20
+      },
+      {
+        "key": "3suite#8",
+        "n_sys": 46,
+        "n_counted": 45,
+        "correct": 15
+      },
+      {
+        "key": "3suite#9",
+        "n_sys": 32,
+        "n_counted": 32,
+        "correct": 14
+      },
+      {
+        "key": "4suite#1",
+        "n_sys": 63,
+        "n_counted": 57,
+        "correct": 19
+      },
+      {
+        "key": "4suite#10",
+        "n_sys": 16,
+        "n_counted": 15,
+        "correct": 12
+      },
+      {
+        "key": "4suite#2",
+        "n_sys": 53,
+        "n_counted": 50,
+        "correct": 17
+      },
+      {
+        "key": "4suite#3",
+        "n_sys": 60,
+        "n_counted": 57,
+        "correct": 29
+      },
+      {
+        "key": "4suite#4",
+        "n_sys": 45,
+        "n_counted": 41,
+        "correct": 24
+      },
+      {
+        "key": "4suite#5",
+        "n_sys": 55,
+        "n_counted": 49,
+        "correct": 18
+      },
+      {
+        "key": "4suite#6",
+        "n_sys": 54,
+        "n_counted": 48,
+        "correct": 25
+      },
+      {
+        "key": "4suite#7",
+        "n_sys": 36,
+        "n_counted": 35,
+        "correct": 24
+      },
+      {
+        "key": "4suite#8",
+        "n_sys": 41,
+        "n_counted": 37,
+        "correct": 16
+      },
+      {
+        "key": "4suite#9",
+        "n_sys": 72,
+        "n_counted": 63,
+        "correct": 20
+      },
+      {
+        "key": "6suite#1",
+        "n_sys": 90,
+        "n_counted": 73,
+        "correct": 26
+      },
+      {
+        "key": "6suite#10",
+        "n_sys": 67,
+        "n_counted": 63,
+        "correct": 18
+      },
+      {
+        "key": "6suite#2",
+        "n_sys": 64,
+        "n_counted": 61,
+        "correct": 24
+      },
+      {
+        "key": "6suite#3",
+        "n_sys": 46,
+        "n_counted": 27,
+        "correct": 4
+      },
+      {
+        "key": "6suite#4",
+        "n_sys": 42,
+        "n_counted": 19,
+        "correct": 0
+      },
+      {
+        "key": "6suite#6",
+        "n_sys": 14,
+        "n_counted": 13,
+        "correct": 8
+      },
+      {
+        "key": "6suite#7",
+        "n_sys": 89,
+        "n_counted": 81,
+        "correct": 20
+      },
+      {
+        "key": "6suite#8",
+        "n_sys": 57,
+        "n_counted": 53,
+        "correct": 27
+      },
+      {
+        "key": "6suite#9",
+        "n_sys": 59,
+        "n_counted": 57,
+        "correct": 38
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "space": "CORE",
+  "classes": [
+    "Balcony",
+    "Bathroom",
+    "Bedroom",
+    "Cloakroom",
+    "Corridor",
+    "DiningRoom",
+    "ElectricalRoom",
+    "ElevatorShaft",
+    "Entrance",
+    "Garden",
+    "Kitchen",
+    "LivingRoom",
+    "Stairwell",
+    "StorageRoom",
+    "StudyRoom",
+    "WaterRoom"
+  ],
+  "folding": {
+    "SunRoom": "Balcony",
+    "VentilationRoom": "ElectricalRoom",
+    "PublicCorridor": "Corridor",
+    "SecondaryCorridor": "Corridor",
+    "MainCorridor": "Corridor"
+  }
+}

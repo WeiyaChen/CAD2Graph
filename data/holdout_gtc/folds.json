@@ -1,0 +1,75 @@
+{
+  "dataset": "D:\\Dev\\BIM\\CAD2Graph\\data\\cad2graph_sagee_gtc.npz",
+  "n_graph_total": 39,
+  "folds": [
+    {
+      "fold": 1,
+      "weights": "D:\\Dev\\BIM\\CAD2Graph\\data\\holdout_gtc\\fold_1.npz",
+      "test_keys": [
+        "2suite#7",
+        "2suite#9",
+        "3suite#10",
+        "3suite#7",
+        "4suite#6",
+        "4suite#9",
+        "6suite#10",
+        "6suite#3"
+      ]
+    },
+    {
+      "fold": 2,
+      "weights": "D:\\Dev\\BIM\\CAD2Graph\\data\\holdout_gtc\\fold_2.npz",
+      "test_keys": [
+        "2suite#10",
+        "2suite#6",
+        "2suite#8",
+        "3suite#1",
+        "3suite#4",
+        "6suite#2",
+        "6suite#6",
+        "6suite#7"
+      ]
+    },
+    {
+      "fold": 3,
+      "weights": "D:\\Dev\\BIM\\CAD2Graph\\data\\holdout_gtc\\fold_3.npz",
+      "test_keys": [
+        "2suite#1",
+        "2suite#3",
+        "2suite#4",
+        "3suite#6",
+        "4suite#2",
+        "4suite#7",
+        "4suite#8",
+        "6suite#8"
+      ]
+    },
+    {
+      "fold": 4,
+      "weights": "D:\\Dev\\BIM\\CAD2Graph\\data\\holdout_gtc\\fold_4.npz",
+      "test_keys": [
+        "3suite#2",
+        "3suite#3",
+        "3suite#8",
+        "4suite#10",
+        "4suite#4",
+        "4suite#5",
+        "6suite#4",
+        "6suite#9"
+      ]
+    },
+    {
+      "fold": 5,
+      "weights": "D:\\Dev\\BIM\\CAD2Graph\\data\\holdout_gtc\\fold_5.npz",
+      "test_keys": [
+        "2suite#2",
+        "2suite#5",
+        "3suite#5",
+        "3suite#9",
+        "4suite#1",
+        "4suite#3",
+        "6suite#1"
+      ]
+    }
+  ]
+}

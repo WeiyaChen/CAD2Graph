@@ -1,0 +1,23 @@
+{
+  "source": "roomgraph.bin",
+  "generator": "DGL.save_graphs / dgl.data.utils.load_graphs",
+  "n_graphs": 224,
+  "n_nodes": 2076,
+  "n_edges": 6634,
+  "node_feat_dim": 8,
+  "edge_feat_dim": 5,
+  "n_classes": 9,
+  "class_counts": [
+    223,
+    224,
+    216,
+    416,
+    162,
+    363,
+    106,
+    221,
+    145
+  ],
+  "license": "MIT (ZijianWang-ZW/SAGE-E)",
+  "citation": "Wang, Z., Sacks, R., Yeung, T., 2022. Exploring graph neural networks for semantic enrichment: Room type classification. Automation in Construction 134:104039."
+}

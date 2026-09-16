@@ -1,0 +1,867 @@
+{
+  "space": "FULL",
+  "graphs": [
+    {
+      "key": "2suite#1",
+      "sys_file": "2suite (1)_raw.jsonld",
+      "n_nodes": 22,
+      "n_nodes_dropped": 2,
+      "n_edges": 38,
+      "match": {
+        "iou": 22,
+        "centroid": 0,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 1,
+        "Garden": 3,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "2suite#10",
+      "sys_file": "2suite (10)_raw.jsonld",
+      "n_nodes": 4,
+      "n_nodes_dropped": 1,
+      "n_edges": 0,
+      "match": {
+        "iou": 4,
+        "centroid": 0,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 2,
+        "Bathroom": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "2suite#2",
+      "sys_file": "2suite (2)_raw.jsonld",
+      "n_nodes": 26,
+      "n_nodes_dropped": 0,
+      "n_edges": 54,
+      "match": {
+        "iou": 26,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Garden": 2,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "PublicCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "2suite#3",
+      "sys_file": "2suite (3)_raw.jsonld",
+      "n_nodes": 26,
+      "n_nodes_dropped": 7,
+      "n_edges": 48,
+      "match": {
+        "iou": 24,
+        "centroid": 2,
+        "none": 7
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 4,
+        "Bedroom": 7,
+        "ElevatorShaft": 1,
+        "Kitchen": 4,
+        "LivingRoom": 2,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "2suite#4",
+      "sys_file": "2suite (4)_raw.jsonld",
+      "n_nodes": 22,
+      "n_nodes_dropped": 2,
+      "n_edges": 38,
+      "match": {
+        "iou": 22,
+        "centroid": 0,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 2,
+        "Bathroom": 4,
+        "Bedroom": 4,
+        "Cloakroom": 2,
+        "ElevatorShaft": 1,
+        "Garden": 4,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "PublicCorridor": 1
+      }
+    },
+    {
+      "key": "2suite#5",
+      "sys_file": "2suite (5)_raw.jsonld",
+      "n_nodes": 24,
+      "n_nodes_dropped": 0,
+      "n_edges": 54,
+      "match": {
+        "iou": 23,
+        "centroid": 1,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "2suite#6",
+      "sys_file": "2suite (6)_raw.jsonld",
+      "n_nodes": 25,
+      "n_nodes_dropped": 0,
+      "n_edges": 44,
+      "match": {
+        "iou": 25,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 1,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StorageRoom": 2,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "2suite#7",
+      "sys_file": "2suite (7)_raw.jsonld",
+      "n_nodes": 22,
+      "n_nodes_dropped": 0,
+      "n_edges": 42,
+      "match": {
+        "iou": 22,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Kitchen": 1,
+        "LivingRoom": 2,
+        "PublicCorridor": 2,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "2suite#8",
+      "sys_file": "2suite (8)_raw.jsonld",
+      "n_nodes": 17,
+      "n_nodes_dropped": 0,
+      "n_edges": 24,
+      "match": {
+        "iou": 17,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 1,
+        "Bathroom": 3,
+        "Bedroom": 8,
+        "Cloakroom": 1,
+        "LivingRoom": 2,
+        "SecondaryCorridor": 2
+      }
+    },
+    {
+      "key": "2suite#9",
+      "sys_file": "2suite (9)_raw.jsonld",
+      "n_nodes": 25,
+      "n_nodes_dropped": 2,
+      "n_edges": 36,
+      "match": {
+        "iou": 25,
+        "centroid": 0,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bathroom": 6,
+        "Bedroom": 8,
+        "Cloakroom": 1,
+        "ElevatorShaft": 1,
+        "Kitchen": 2,
+        "LivingRoom": 1,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "3suite#1",
+      "sys_file": "3suite (1)_raw.jsonld",
+      "n_nodes": 27,
+      "n_nodes_dropped": 1,
+      "n_edges": 50,
+      "match": {
+        "iou": 26,
+        "centroid": 1,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bathroom": 4,
+        "Bedroom": 7,
+        "Cloakroom": 1,
+        "DiningRoom": 1,
+        "ElevatorShaft": 2,
+        "Kitchen": 3,
+        "PublicCorridor": 3,
+        "SecondaryCorridor": 1,
+        "Stairwell": 1,
+        "WaterRoom": 1
+      }
+    },
+    {
+      "key": "3suite#10",
+      "sys_file": "3suite (10)_raw.jsonld",
+      "n_nodes": 27,
+      "n_nodes_dropped": 1,
+      "n_edges": 24,
+      "match": {
+        "iou": 26,
+        "centroid": 1,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 5,
+        "Bedroom": 5,
+        "Garden": 7,
+        "Kitchen": 3,
+        "LivingRoom": 1,
+        "PublicCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "3suite#2",
+      "sys_file": "3suite (2)_raw.jsonld",
+      "n_nodes": 33,
+      "n_nodes_dropped": 0,
+      "n_edges": 68,
+      "match": {
+        "iou": 32,
+        "centroid": 1,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 1,
+        "Bathroom": 6,
+        "Bedroom": 9,
+        "ElevatorShaft": 2,
+        "Kitchen": 4,
+        "LivingRoom": 3,
+        "MainCorridor": 2,
+        "PublicCorridor": 3,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "3suite#3",
+      "sys_file": "3suite (3)_raw.jsonld",
+      "n_nodes": 31,
+      "n_nodes_dropped": 2,
+      "n_edges": 66,
+      "match": {
+        "iou": 30,
+        "centroid": 1,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 5,
+        "Bedroom": 10,
+        "ElevatorShaft": 2,
+        "Kitchen": 3,
+        "LivingRoom": 3,
+        "PublicCorridor": 2,
+        "Stairwell": 1,
+        "StorageRoom": 1
+      }
+    },
+    {
+      "key": "3suite#4",
+      "sys_file": "3suite (4)_raw.jsonld",
+      "n_nodes": 31,
+      "n_nodes_dropped": 2,
+      "n_edges": 56,
+      "match": {
+        "iou": 30,
+        "centroid": 1,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 7,
+        "Bedroom": 9,
+        "Kitchen": 3,
+        "LivingRoom": 2,
+        "SecondaryCorridor": 1,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "3suite#5",
+      "sys_file": "3suite (5)_raw.jsonld",
+      "n_nodes": 29,
+      "n_nodes_dropped": 0,
+      "n_edges": 52,
+      "match": {
+        "iou": 29,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 5,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Kitchen": 3,
+        "LivingRoom": 3,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "3suite#6",
+      "sys_file": "3suite (6)_raw.jsonld",
+      "n_nodes": 29,
+      "n_nodes_dropped": 1,
+      "n_edges": 42,
+      "match": {
+        "iou": 29,
+        "centroid": 0,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 2,
+        "Bathroom": 6,
+        "Bedroom": 9,
+        "ElevatorShaft": 2,
+        "Kitchen": 3,
+        "LivingRoom": 3,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StorageRoom": 2
+      }
+    },
+    {
+      "key": "3suite#7",
+      "sys_file": "3suite (7)_raw.jsonld",
+      "n_nodes": 28,
+      "n_nodes_dropped": 0,
+      "n_edges": 54,
+      "match": {
+        "iou": 28,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bathroom": 6,
+        "Bedroom": 9,
+        "Kitchen": 4,
+        "LivingRoom": 3,
+        "PublicCorridor": 2,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "3suite#8",
+      "sys_file": "3suite (8)_raw.jsonld",
+      "n_nodes": 21,
+      "n_nodes_dropped": 0,
+      "n_edges": 32,
+      "match": {
+        "iou": 21,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 2,
+        "Bathroom": 5,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Kitchen": 2,
+        "LivingRoom": 1,
+        "PublicCorridor": 2,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "3suite#9",
+      "sys_file": "3suite (9)_raw.jsonld",
+      "n_nodes": 25,
+      "n_nodes_dropped": 0,
+      "n_edges": 42,
+      "match": {
+        "iou": 25,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 5,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Garden": 1,
+        "Kitchen": 3,
+        "LivingRoom": 2,
+        "PublicCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "4suite#1",
+      "sys_file": "4suite (1)_raw.jsonld",
+      "n_nodes": 38,
+      "n_nodes_dropped": 2,
+      "n_edges": 70,
+      "match": {
+        "iou": 37,
+        "centroid": 1,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 7,
+        "Bathroom": 7,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Garden": 3,
+        "Kitchen": 4,
+        "LivingRoom": 4,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "StudyRoom": 3
+      }
+    },
+    {
+      "key": "4suite#10",
+      "sys_file": "4suite (10)_raw.jsonld",
+      "n_nodes": 10,
+      "n_nodes_dropped": 0,
+      "n_edges": 0,
+      "match": {
+        "iou": 10,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 1,
+        "Bedroom": 3
+      }
+    },
+    {
+      "key": "4suite#2",
+      "sys_file": "4suite (2)_raw.jsonld",
+      "n_nodes": 35,
+      "n_nodes_dropped": 3,
+      "n_edges": 78,
+      "match": {
+        "iou": 33,
+        "centroid": 2,
+        "none": 3
+      },
+      "label_counts": {
+        "Balcony": 8,
+        "Bathroom": 6,
+        "Bedroom": 6,
+        "Kitchen": 3,
+        "LivingRoom": 4,
+        "PublicCorridor": 3,
+        "SecondaryCorridor": 2,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "4suite#3",
+      "sys_file": "4suite (3)_raw.jsonld",
+      "n_nodes": 39,
+      "n_nodes_dropped": 1,
+      "n_edges": 82,
+      "match": {
+        "iou": 39,
+        "centroid": 0,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 8,
+        "Bathroom": 5,
+        "Bedroom": 12,
+        "ElevatorShaft": 1,
+        "Kitchen": 3,
+        "LivingRoom": 4,
+        "PublicCorridor": 3,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "4suite#4",
+      "sys_file": "4suite (4)_raw.jsonld",
+      "n_nodes": 37,
+      "n_nodes_dropped": 3,
+      "n_edges": 66,
+      "match": {
+        "iou": 37,
+        "centroid": 0,
+        "none": 3
+      },
+      "label_counts": {
+        "Balcony": 5,
+        "Bathroom": 6,
+        "Bedroom": 10,
+        "ElectricalRoom": 1,
+        "ElevatorShaft": 2,
+        "Garden": 2,
+        "Kitchen": 3,
+        "LivingRoom": 4,
+        "PublicCorridor": 3,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "4suite#5",
+      "sys_file": "4suite (5)_raw.jsonld",
+      "n_nodes": 35,
+      "n_nodes_dropped": 3,
+      "n_edges": 68,
+      "match": {
+        "iou": 35,
+        "centroid": 0,
+        "none": 3
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 6,
+        "Bedroom": 9,
+        "Cloakroom": 1,
+        "Garden": 1,
+        "Kitchen": 4,
+        "LivingRoom": 4,
+        "PublicCorridor": 2,
+        "Stairwell": 1,
+        "StudyRoom": 1
+      }
+    },
+    {
+      "key": "4suite#6",
+      "sys_file": "4suite (6)_raw.jsonld",
+      "n_nodes": 31,
+      "n_nodes_dropped": 5,
+      "n_edges": 60,
+      "match": {
+        "iou": 31,
+        "centroid": 0,
+        "none": 5
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 2,
+        "Kitchen": 4,
+        "LivingRoom": 4,
+        "PublicCorridor": 2,
+        "Stairwell": 1,
+        "StudyRoom": 2
+      }
+    },
+    {
+      "key": "4suite#7",
+      "sys_file": "4suite (7)_raw.jsonld",
+      "n_nodes": 26,
+      "n_nodes_dropped": 0,
+      "n_edges": 52,
+      "match": {
+        "iou": 26,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 4,
+        "Bedroom": 6,
+        "ElevatorShaft": 1,
+        "Kitchen": 4,
+        "LivingRoom": 4,
+        "PublicCorridor": 1
+      }
+    },
+    {
+      "key": "4suite#8",
+      "sys_file": "4suite (8)_raw.jsonld",
+      "n_nodes": 28,
+      "n_nodes_dropped": 3,
+      "n_edges": 58,
+      "match": {
+        "iou": 28,
+        "centroid": 0,
+        "none": 3
+      },
+      "label_counts": {
+        "Balcony": 5,
+        "Bathroom": 4,
+        "Bedroom": 8,
+        "Kitchen": 4,
+        "LivingRoom": 4,
+        "PublicCorridor": 2,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "4suite#9",
+      "sys_file": "4suite (9)_raw.jsonld",
+      "n_nodes": 26,
+      "n_nodes_dropped": 1,
+      "n_edges": 62,
+      "match": {
+        "iou": 23,
+        "centroid": 3,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bathroom": 4,
+        "Bedroom": 12,
+        "ElevatorShaft": 1,
+        "Kitchen": 2,
+        "LivingRoom": 2,
+        "SecondaryCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "6suite#1",
+      "sys_file": "6suite (1)_raw.jsonld",
+      "n_nodes": 49,
+      "n_nodes_dropped": 8,
+      "n_edges": 72,
+      "match": {
+        "iou": 48,
+        "centroid": 1,
+        "none": 8
+      },
+      "label_counts": {
+        "Balcony": 8,
+        "Bathroom": 10,
+        "Bedroom": 18,
+        "ElevatorShaft": 3,
+        "Kitchen": 2,
+        "LivingRoom": 3,
+        "PublicCorridor": 1,
+        "SecondaryCorridor": 1,
+        "Stairwell": 1,
+        "StorageRoom": 2
+      }
+    },
+    {
+      "key": "6suite#10",
+      "sys_file": "6suite (10)_raw.jsonld",
+      "n_nodes": 32,
+      "n_nodes_dropped": 1,
+      "n_edges": 44,
+      "match": {
+        "iou": 31,
+        "centroid": 1,
+        "none": 1
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 6,
+        "Bedroom": 6,
+        "DiningRoom": 1,
+        "ElectricalRoom": 1,
+        "ElevatorShaft": 2,
+        "Kitchen": 6,
+        "LivingRoom": 1,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "WaterRoom": 1
+      }
+    },
+    {
+      "key": "6suite#2",
+      "sys_file": "6suite (2)_raw.jsonld",
+      "n_nodes": 33,
+      "n_nodes_dropped": 3,
+      "n_edges": 54,
+      "match": {
+        "iou": 33,
+        "centroid": 0,
+        "none": 3
+      },
+      "label_counts": {
+        "Balcony": 6,
+        "Bathroom": 5,
+        "Bedroom": 8,
+        "ElevatorShaft": 1,
+        "Kitchen": 7,
+        "LivingRoom": 4,
+        "PublicCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "6suite#3",
+      "sys_file": "6suite (3)_raw.jsonld",
+      "n_nodes": 22,
+      "n_nodes_dropped": 14,
+      "n_edges": 30,
+      "match": {
+        "iou": 10,
+        "centroid": 12,
+        "none": 14
+      },
+      "label_counts": {
+        "Balcony": 3,
+        "Bedroom": 5,
+        "ElevatorShaft": 1,
+        "Garden": 1,
+        "Kitchen": 2,
+        "LivingRoom": 10
+      }
+    },
+    {
+      "key": "6suite#4",
+      "sys_file": "6suite (4)_raw.jsonld",
+      "n_nodes": 3,
+      "n_nodes_dropped": 2,
+      "n_edges": 0,
+      "match": {
+        "iou": 1,
+        "centroid": 2,
+        "none": 2
+      },
+      "label_counts": {
+        "Bedroom": 1,
+        "DiningRoom": 1,
+        "ElevatorShaft": 1
+      }
+    },
+    {
+      "key": "6suite#6",
+      "sys_file": "6suite (6)_raw.jsonld",
+      "n_nodes": 3,
+      "n_nodes_dropped": 0,
+      "n_edges": 0,
+      "match": {
+        "iou": 3,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 2,
+        "Bathroom": 1
+      }
+    },
+    {
+      "key": "6suite#7",
+      "sys_file": "6suite (7)_raw.jsonld",
+      "n_nodes": 53,
+      "n_nodes_dropped": 2,
+      "n_edges": 92,
+      "match": {
+        "iou": 44,
+        "centroid": 9,
+        "none": 2
+      },
+      "label_counts": {
+        "Balcony": 9,
+        "Bathroom": 9,
+        "Bedroom": 20,
+        "ElevatorShaft": 2,
+        "Kitchen": 7,
+        "LivingRoom": 2,
+        "Stairwell": 4
+      }
+    },
+    {
+      "key": "6suite#8",
+      "sys_file": "6suite (8)_raw.jsonld",
+      "n_nodes": 43,
+      "n_nodes_dropped": 0,
+      "n_edges": 88,
+      "match": {
+        "iou": 42,
+        "centroid": 1,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 8,
+        "Bathroom": 10,
+        "Bedroom": 10,
+        "ElevatorShaft": 1,
+        "Kitchen": 6,
+        "LivingRoom": 5,
+        "PublicCorridor": 1,
+        "SecondaryCorridor": 1,
+        "Stairwell": 1
+      }
+    },
+    {
+      "key": "6suite#9",
+      "sys_file": "6suite (9)_raw.jsonld",
+      "n_nodes": 43,
+      "n_nodes_dropped": 0,
+      "n_edges": 64,
+      "match": {
+        "iou": 43,
+        "centroid": 0,
+        "none": 0
+      },
+      "label_counts": {
+        "Balcony": 4,
+        "Bathroom": 7,
+        "Bedroom": 14,
+        "ElevatorShaft": 1,
+        "Garden": 2,
+        "Kitchen": 6,
+        "LivingRoom": 6,
+        "PublicCorridor": 1,
+        "Stairwell": 1,
+        "WaterRoom": 1
+      }
+    }
+  ]
+}
