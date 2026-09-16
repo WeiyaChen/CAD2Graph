@@ -6,6 +6,14 @@
 
 from .cdt import CDTContourExtractor
 from .filters import SpaceShapeFilter
+from .gt import GTContourExtractor
 from .rgp import RGPContourExtractor
+from .vecfloorseg import VecFloorSegContourExtractor
 
-__all__ = ["CDTContourExtractor", "RGPContourExtractor", "SpaceShapeFilter"]
+__all__ = [
+    "CDTContourExtractor",
+    "GTContourExtractor",
+    "RGPContourExtractor",
+    "VecFloorSegContourExtractor",
+    "SpaceShapeFilter",
+]

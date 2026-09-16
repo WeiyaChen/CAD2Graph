@@ -45,8 +45,21 @@ class GraphEnrichmentPipeline:
         self.graph_data = geo_engine.enrich()
         self._snapshot("geometry")
 
-        # 3. 近似凸分解 (处理复合标签，切分多边形)，此处如果被注释说明在做消融实验
-        acd_processor = ACDProcessor(self.graph_data)
+        # 3. 近似凸分解（处理复合标签，切分多边形）
+        #
+        # ⚠️ 这一步是 ``LLMMultiStage`` 方法的**创新能力**，不是通用管线环节：
+        # 一个空间被判了多个建筑语义标签时（如 LivingRoom + DiningRoom 共处一个开放区），
+        # 用近似凸分解把它切开。没有这个能力的基线（``SAGEE`` 单标签、``TextMatching``）
+        # **不应被白送**，否则比的就成了"同一管线换分类器"而不是"方法对方法"。
+        # 能力由分类器自己声明（``supports_composite_split``），这里只负责读取。
+        #
+        # （历史做法：直接 `ACDProcessor(self.graph_data)` 无条件启用 —— 于是只要某个空间
+        # 拿到了 ≥2 个 bldg: 标签就会切分，TextMatching 命中多处文字时也会触发。）
+        use_acd = bool(getattr(
+            getattr(sem_engine, '_classifier', None), 'supports_composite_split', False))
+        if not use_acd:
+            print('[Enricher] 跳过 ACD 复合空间切分（分类器未声明 supports_composite_split）')
+        acd_processor = ACDProcessor(self.graph_data, enabled=use_acd)
         self.graph_data = acd_processor.process()
         self._snapshot("acd")
 

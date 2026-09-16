@@ -47,6 +47,12 @@ class LLMMultiStageClassifier(ISpaceTypeClassifier):
 
     name = "LLMMultiStage"
 
+    #: 本方法是**唯一**声明"自带复合空间分割/聚合（ACD）"的分类器 —— 这是本方法的
+    #: 创新点之一：一处开放空间若同时被判为 LivingRoom + DiningRoom，用近似凸分解切开。
+    #: 其余分类器（``SAGEE`` 单标签、``TextMatching``）不声明，流水线就不会给它们跑 ACD。
+    #: 详见 :attr:`src.spatial.contracts.ISpaceTypeClassifier.supports_composite_split`。
+    supports_composite_split = True
+
     def __init__(
         self,
         *,

@@ -48,9 +48,12 @@ def create_contour_extractor(
         config: 已解析的配置；``None`` 时从 ``settings.yaml`` 读取。
     """
     resolved = config or SpatialPipelineConfig.from_settings()
-    merged = dict(resolved.contour_params)
+    name = algorithm or resolved.contour_algorithm
+    # 先按 *最终* 算法名取参，再叠加显式 params：这样 CLI / Web UI 临时切换算法时，
+    # settings.yaml 里为该算法写的 algorithm_params 分组不会被丢掉。
+    merged = resolved.contour_params_for(name)
     merged.update(params or {})
-    return CONTOUR_EXTRACTORS.create(algorithm or resolved.contour_algorithm, params=merged)
+    return CONTOUR_EXTRACTORS.create(name, params=merged)
 
 
 def create_space_type_classifier(
@@ -67,7 +70,9 @@ def create_space_type_classifier(
     实例后注入；未显式配置时交给算法自身的缺省值。
     """
     resolved = config or SpatialPipelineConfig.from_settings()
-    merged = dict(resolved.classifier_params)
+    name = algorithm or resolved.classifier_algorithm
+    # 同 create_contour_extractor：按最终算法名取参。
+    merged = resolved.classifier_params_for(name)
     merged.update(params or {})
 
     model = llm_model or _default_llm_model()
@@ -84,7 +89,7 @@ def create_space_type_classifier(
         )
 
     return SPACE_TYPE_CLASSIFIERS.create(
-        algorithm or resolved.classifier_algorithm,
+        name,
         params=merged,
         services=services,
     )

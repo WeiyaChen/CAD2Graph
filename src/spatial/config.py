@@ -133,6 +133,40 @@ class SpatialPipelineConfig:
             classifier_algorithm_params=classifier_algorithm_params,
         )
 
+    # ------------------------------------------------------------------ helpers
+    def contour_params_for(self, algorithm: str | None = None) -> dict[str, Any]:
+        """``contour_params`` 再叠加 *指定算法* 的 ``algorithm_params`` 分组。
+
+        ``contour_params`` 自身只叠加了 ``settings.yaml`` 中 ``algorithm`` 那
+        一组，因此当调用方（CLI / Web UI / API）临时改用别的算法时，必须用本
+        方法重新取参；否则写在 ``algorithm_params.<该算法>`` 里的专属参数会被
+        静默忽略，算法只拿到 ``params`` 里的共享参数和自身默认值。
+        """
+        params = dict(self.contour_params)
+        params.update(
+            _algorithm_overrides(
+                self.contour_algorithm_params,
+                algorithm or self.contour_algorithm,
+                CONTOUR_EXTRACTORS,
+            )
+        )
+        return params
+
+    def classifier_params_for(self, algorithm: str | None = None) -> dict[str, Any]:
+        """``classifier_params`` 再叠加 *指定算法* 的 ``algorithm_params`` 分组。
+
+        语义与 :meth:`contour_params_for` 一致，见那里的说明。
+        """
+        params = dict(self.classifier_params)
+        params.update(
+            _algorithm_overrides(
+                self.classifier_algorithm_params,
+                algorithm or self.classifier_algorithm,
+                SPACE_TYPE_CLASSIFIERS,
+            )
+        )
+        return params
+
 
 def _as_mapping(value: Any) -> dict[str, Any]:
     return dict(value) if isinstance(value, Mapping) else {}

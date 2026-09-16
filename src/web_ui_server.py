@@ -1,8 +1,7 @@
-"""UI server for the CAD rule checker pipeline."""
+"""UI server for the CAD2Graph pipeline."""
 import os
 os.environ.setdefault('MPLBACKEND', 'Agg')  # force non-interactive backend BEFORE any matplotlib import
 
-import csv
 import json
 import re
 import subprocess
@@ -70,9 +69,6 @@ class UIHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == '/api/preview':
             self._serve_preview(parse_qs(parsed.query).get('path', [''])[0])
-            return
-        if parsed.path == '/api/evaluation-data':
-            self._send_json(self._evaluation_data())
             return
         if parsed.path == '/api/available-dxfs':
             self._send_json(self._available_dxfs())
@@ -172,47 +168,6 @@ class UIHandler(BaseHTTPRequestHandler):
                 self._send_json({'ok': False, 'error': 'timeout', 'stdout': (exc.stdout or ''), 'stderr': (exc.stderr or '')}, 504)
             return
 
-        if parsed.path == '/api/run-evaluation':
-            length = int(self.headers.get('Content-Length', '0'))
-            body = self.rfile.read(length).decode('utf-8') if length else '{}'
-            try:
-                data = json.loads(body or '{}')
-            except json.JSONDecodeError:
-                self._send_json({'ok': False, 'error': 'invalid_json'}, 400)
-                return
-
-            sys_out_dir = data.get('sysOutDir') or 'output/jsonld'
-            gt_dir = data.get('gtDir') or 'output/gt'
-            violation_dir = data.get('violationDir') or ''
-            eval_output_dir = data.get('evalOutputDir') or 'output/html'
-
-            sys_out_path = (ROOT / sys_out_dir).resolve()
-            gt_path = (ROOT / gt_dir).resolve()
-            violation_path = (ROOT / violation_dir).resolve() if violation_dir else None
-            eval_out_path = (ROOT / eval_output_dir).resolve()
-            eval_out_path.mkdir(parents=True, exist_ok=True)
-
-            try:
-                from src.experiment.dataset_evaluator import BatchDatasetEvaluator
-
-                evaluator = BatchDatasetEvaluator(
-                    gt_dir=str(gt_path),
-                    sys_out_dir=str(sys_out_path),
-                    violation_dir=str(violation_path) if violation_path else None,
-                    output_dir=str(eval_out_path)
-                )
-                evaluator.run_evaluation()
-
-                # Load and return the overall results
-                overall_file = eval_out_path / 'overall_results.json'
-                msg = ''
-                if overall_file.exists():
-                    msg = f'Results saved to {_repo_rel(eval_out_path)}'
-                self._send_json({'ok': True, 'message': msg})
-            except Exception as ex:
-                self._send_json({'ok': False, 'error': str(ex)}, 500)
-            return
-
         # ==========================================
         # 类别一：正常使用 —— 输入单个 DXF，端到端分析并可视化
         # ==========================================
@@ -268,7 +223,7 @@ class UIHandler(BaseHTTPRequestHandler):
             return
 
         # ==========================================
-        # 类别二 2.1：图纸分析 —— 单个 DXF，左右同屏对比系统结果与 GT 结果
+        # 类别二：图纸分析 —— 单个 DXF，左右同屏对比系统结果与 GT 结果
         # ==========================================
         if parsed.path == '/api/experiment-draw':
             data = self._read_json_body()
@@ -330,75 +285,7 @@ class UIHandler(BaseHTTPRequestHandler):
                 'sysJsonld': self._rel_or_none(output_dir_path / f'{base_name}.jsonld'),
                 'gtJsonld': self._rel_or_none(gt_path) if gt_path else None,
                 'gtTopology': self._rel_or_none(viz_dir / f'{gt_stem}_topology.png') if gt_stem else None,
-                'gtInstance': self._rel_or_none(viz_dir / f'{gt_stem}_gt_topology.png') if gt_stem else None,
-            }
-            self._send_json(payload)
-            return
-
-        # ==========================================
-        # 类别二 2.2：SHACL 审查 —— 输入 DXF，自动定位/处理对应文件后再审查
-        # ==========================================
-        if parsed.path == '/api/experiment-shacl':
-            data = self._read_json_body()
-            if data is None:
-                self._send_json({'ok': False, 'error': 'invalid_json'}, 400)
-                return
-
-            dxf_path = self._resolve_dxf_path(data.get('dxfFile') or '')
-            output_dir = data.get('outputDir') or 'output/jsonld'
-            if not dxf_path:
-                self._send_json({'ok': False, 'error': f'DXF file not found: {data.get("dxfFile")}'}, 404)
-                return
-
-            contour_algo, classifier_algo, algo_error = self._resolve_requested_algos(data)
-            if algo_error:
-                self._send_json({'ok': False, 'error': algo_error}, 400)
-                return
-
-            base_name = dxf_path.stem
-            svg_path, svg_error = self._ensure_svg(dxf_path, base_name)
-            if svg_error:
-                self._send_json({'ok': False, 'error': svg_error}, 500)
-                return
-
-            output_dir_path = self._abs_output_dir(output_dir)
-            jsonld_path = output_dir_path / f'{base_name}.jsonld'
-
-            # 自动定位已处理文件；若为未处理或算法配置不一致的旧文件则先解析
-            run = {'returnCode': 0, 'stdout': '', 'stderr': ''}
-            reused = not bool(data.get('forceReparse')) and self._is_reusable_run(
-                output_dir_path, base_name, contour_algo, classifier_algo)
-            if not reused:
-                run = self._run_parsing_single(base_name + '.svg', output_dir, contour_algo, classifier_algo)
-                self._record_run(output_dir_path, base_name, contour_algo, classifier_algo, run['returnCode'])
-                if run['returnCode'] != 0:
-                    self._send_json({'ok': False, 'error': 'parsing failed', 'stdout': run['stdout'], 'stderr': run['stderr']}, 500)
-                    return
-                self._invalidate_kg_cache(base_name)
-
-            try:
-                from src.experiment.compliance_reviewer import review_single
-                status, violations = review_single(str(jsonld_path), save_html=True)
-            except Exception as e:
-                self._send_json({'ok': False, 'error': f'compliance review failed: {e}'}, 500)
-                return
-
-            violations_json = Path(settings.violations_dir) / f'{base_name}_violations.json'
-            html_path = Path(settings.html_dir) / f'{base_name}_compliance_report.html'
-            payload = {
-                'ok': True,
-                'base': base_name,
-                'reused': reused,
-                'contourAlgo': contour_algo,
-                'classifierAlgo': classifier_algo,
-                'llmEnabled': bool(settings.llm_api_key),
-                'llmModel': settings.llm_model,
-                'status': status,
-                'violationCount': len(violations),
-                'violationsJson': self._rel_or_none(violations_json),
-                'reportHtml': self._rel_or_none(html_path),
-                'stdout': run['stdout'],
-                'stderr': run['stderr'],
+                'gtInstance': self._rel_or_none(viz_dir / f'{gt_stem}_topology.png') if gt_stem else None,
             }
             self._send_json(payload)
             return
@@ -423,6 +310,54 @@ class UIHandler(BaseHTTPRequestHandler):
             return
 
         # Run a specific pipeline step (dxf2svg, extract-elements, build-topology, enrich-graph, visualize-graph)
+        # ==========================================
+        # SAGEE 的**折外**重新推理：只跑包含该图纸的那一折的留出模型。
+        #
+        # 为什么不能直接走 /api/experiment-draw：那会用**部署模型**（在全部 39 张图上
+        # 训练过）来预测，得到的是样本内结果 —— 实测虚高 17 个百分点。基准表里
+        # SAGEE 那一行必须来自「没见过这张图的模型」。
+        # ==========================================
+        if parsed.path == '/api/run-holdout-drawing':
+            data = self._read_json_body()
+            if data is None:
+                self._send_json({'ok': False, 'error': 'invalid_json'}, 400)
+                return
+            key = str(data.get('key') or '').strip()          # '2suite#1'
+            folds_dir = data.get('foldsDir') or 'data/holdout_gtc'
+            out_dir = data.get('outDir') or 'output/bench/type_SAGEE'
+            contour_algo = data.get('contourAlgo') or 'GT'
+
+            manifest_path = (ROOT / folds_dir / 'folds.json')
+            if not key or not manifest_path.exists():
+                self._send_json({'ok': False, 'error': f'folds.json not found: {folds_dir}'}, 404)
+                return
+            with open(manifest_path, encoding='utf-8') as f:
+                manifest = json.load(f)
+            fold = next((f for f in manifest.get('folds', []) if key in f.get('test_keys', [])), None)
+            if fold is None:
+                self._send_json({'ok': False,
+                                 'error': f'"{key}" 不在任何一折的留出集里（训练集数据不是最新？）'}, 404)
+                return
+
+            cmd = [sys.executable, '-u', str(ROOT / 'scripts' / 'run_holdout_eval.py'),
+                   '--folds', folds_dir, '--thresholds', '0.0',
+                   '--out-root', str(ROOT / 'output' / 'bench'), '--out-name', os.path.basename(out_dir),
+                   '--contour-algo', contour_algo, '--only-fold', str(fold['fold'])]
+            env = os.environ.copy()
+            env['PYTHONIOENCODING'] = 'utf-8'
+            proc = subprocess.run(cmd, cwd=str(ROOT), env=env, capture_output=True,
+                                  text=True, encoding='utf-8', errors='replace')
+            produced = (ROOT / out_dir / f'{key.split("#")[0]} ({key.split("#")[1]}).jsonld')
+            self._send_json({
+                'ok': proc.returncode == 0 and produced.exists(),
+                'fold': fold['fold'],
+                'weights': fold.get('weights'),
+                'produced': produced.exists(),
+                'stdout': (proc.stdout or '')[-2000:],
+                'stderr': (proc.stderr or '')[-2000:] if proc.returncode else '',
+            })
+            return
+
         if parsed.path == '/api/run-step':
             length = int(self.headers.get('Content-Length', '0'))
             body = self.rfile.read(length).decode('utf-8') if length else '{}'
@@ -619,7 +554,6 @@ class UIHandler(BaseHTTPRequestHandler):
             '.json': 'application/json; charset=utf-8',
             '.jsonld': 'application/json; charset=utf-8',
             '.html': 'text/html; charset=utf-8',
-            '.ttl': 'text/turtle; charset=utf-8',
         }.get(suffix, 'application/octet-stream')
         self.send_response(200)
         self.send_header('Content-Type', mime)
@@ -710,13 +644,23 @@ class UIHandler(BaseHTTPRequestHandler):
             src     -- 'system' (default) or 'gt'
             stages  -- '1' to include the 富化过程 stage replay (system, needs raw+svg)
             refresh -- '1' to force regeneration instead of reusing the cache
+            dir     -- (optional) override the directory holding the system `<base>.jsonld`,
+                       e.g. 'output/bench/type_SAGEE'. Stage replay is disabled when set,
+                       because it also needs `<base>_raw.jsonld` + the source SVG to agree.
+            tag     -- (optional) suffix for the generated HTML file name, so graphs of the
+                       same drawing from different run directories do not overwrite each other.
         """
         base = (q.get('base') or [''])[0]
         src = (q.get('src') or ['system'])[0]
         want_stages = (q.get('stages') or ['0'])[0] == '1'
         refresh = (q.get('refresh') or ['0'])[0] == '1'
+        alt_dir = (q.get('dir') or [''])[0]
+        tag = (q.get('tag') or [''])[0]
         if not base:
             self._send_json({'ok': False, 'error': 'missing base'}, 400)
+            return
+        if tag and not re.fullmatch(r'[A-Za-z0-9_-]+', tag):
+            self._send_json({'ok': False, 'error': 'invalid tag'}, 400)
             return
 
         viz_dir = Path(settings.viz_dir)
@@ -725,8 +669,12 @@ class UIHandler(BaseHTTPRequestHandler):
             suffix = '_gt'
             want_stages = False
         else:
-            final_path = Path(settings.jsonld_dir) / f'{base}.jsonld'
-            suffix = '_stages' if want_stages else ''
+            base_dir = Path(alt_dir) if alt_dir else Path(settings.jsonld_dir)
+            final_path = base_dir / f'{base}.jsonld'
+            if alt_dir:
+                # 备用目录只用于「只画最终图谱」；阶段回放依赖 settings 里的 raw+svg
+                want_stages = False
+            suffix = ('_' + tag) if tag else ('_stages' if want_stages else '')
 
         if not final_path or not final_path.exists():
             self._send_json({'ok': False, 'error': f'{src} jsonld not found for "{base}"'}, 404)
@@ -877,89 +825,10 @@ class UIHandler(BaseHTTPRequestHandler):
             except Exception:
                 pass
 
-    def _evaluation_data(self):
-        """Serve the batch evaluation results.
-
-        SHACL compliance results (Exp 5) are kept separate from the core
-        geometry / topology / geometric computation / semantic results:
-        the former come from ``compliance_results.json`` and
-        ``compliance_individual_results.csv``, the latter from
-        ``overall_results.json`` and ``individual_results.csv``.
-        """
-        def _flatten(path_pattern):
-            """Read the first matching JSON file and flatten nested groups."""
-            files = list((ROOT / 'output' / 'html').rglob(path_pattern))
-            for f in files:
-                try:
-                    with open(f, 'r', encoding='utf-8') as fh:
-                        data = json.load(fh)
-                except Exception:
-                    continue
-                flat = {'source': _repo_rel(f)}
-                for group, values in data.items():
-                    if isinstance(values, dict):
-                        for key, value in values.items():
-                            flat[key] = value
-                    else:
-                        flat[group] = values
-                return data, flat
-            return None, None
-
-        # Core experiments (geometry / topology / geometric computation / semantic)
-        raw_overall, core_row = _flatten('overall_results.json')
-        if core_row is None:
-            core_row = {
-                'source': 'output/html/overall_results.json',
-                'Global_1to1_Match_Rate': 0,
-                'Global_mIoU': 0,
-                'Global_Precision': 0,
-                'Global_Recall': 0,
-                'Global_F1': 0,
-                'Global_MAE_Area': 0,
-                'Global_MAE_Width': 0,
-                'Global_Accuracy': 0,
-                'Global_Macro_F1': 0,
-            }
-
-        # SHACL compliance summary (Exp 5) — separate file / column
-        raw_compliance, comp_row = _flatten('compliance_results.json')
-        if comp_row is None:
-            comp_row = {
-                'source': 'output/html/compliance_results.json',
-                'Global_Precision': 0,
-                'Global_Recall': 0,
-                'Global_F1': 0,
-            }
-
-        individual_files = list((ROOT / 'output' / 'html').rglob('individual_results.csv'))
-        individual_rows = []
-        if individual_files:
-            with open(individual_files[0], 'r', encoding='utf-8-sig') as fh:
-                reader = csv.DictReader(fh)
-                individual_rows = list(reader)
-
-        compliance_individual_files = list((ROOT / 'output' / 'html').rglob('compliance_individual_results.csv'))
-        compliance_individual_rows = []
-        if compliance_individual_files:
-            with open(compliance_individual_files[0], 'r', encoding='utf-8-sig') as fh:
-                reader = csv.DictReader(fh)
-                compliance_individual_rows = list(reader)
-
-        return {
-            'overall': core_row,
-            'raw': raw_overall,
-            'individual': individual_rows,
-            'compliance': comp_row,
-            'complianceRaw': raw_compliance,
-            'complianceIndividual': compliance_individual_rows,
-            'chart': [
-                {'label': 'Geometry 1to1', 'value': core_row.get('Global_1to1_Match_Rate', 0)},
-                {'label': 'Geometry mIoU', 'value': core_row.get('Global_mIoU', 0)},
-                {'label': 'Topology F1', 'value': core_row.get('Global_F1', 0)},
-                {'label': 'Area MAE', 'value': core_row.get('Global_MAE_Area', 0)},
-                {'label': 'Semantic Accuracy', 'value': core_row.get('Global_Accuracy', 0)},
-            ]
-        }
+    # 注：`/api/evaluation-data` 与 `/api/run-evaluation` 已随 Exp 1-4 面板一起下线。
+    # 端到端对比改由 `overall_report.html` 直接读 `output/bench/scores.json`，
+    # 不再经过 `src/experiment/dataset_evaluator.py`（那套指标只覆盖单条流水线，
+    # 无法表达“任务1算法 × 任务2算法”的排列组合）。
 
 
 def run_server(host='0.0.0.0', port=8001):

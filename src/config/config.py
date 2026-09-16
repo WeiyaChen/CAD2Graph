@@ -12,8 +12,18 @@ import yaml
 # 假设当前文件在 src/config/config.py
 # .parent -> src/config
 # .parent -> src
-# .parent -> 项目根目录 (cad_rule_checker/)
+# .parent -> 项目根目录 (CAD2Graph/)
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+
+# ==========================================
+# 1.05 环境变量前缀
+# ==========================================
+# 项目原名 CAD Rule Checker，环境变量前缀为 CAD_RULE_CHECKER_；
+# 更名为 CAD2Graph 后统一为 CAD2GRAPH_。
+# 旧前缀仍然兼容（新前缀优先），因此已经配置好的旧变量不会失效。
+ENV_PREFIX = 'CAD2GRAPH_'
+LEGACY_ENV_PREFIX = 'CAD_RULE_CHECKER_'
 
 
 # ==========================================
@@ -21,7 +31,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 # ==========================================
 # 只补充进程环境中尚不存在的键（os.environ.setdefault），因此 shell 里显式
 # export 的值优先。注意 PowerShell 的 ``$env:X = ''`` 是删除变量而非设为空串，
-# 所以另提供 CAD_RULE_CHECKER_SKIP_DOTENV=1 作为彻底跳过 .env 的开关，
+# 所以另提供 CAD2GRAPH_SKIP_DOTENV=1 作为彻底跳过 .env 的开关，
 # 用于强制在无 LLM 的规则模式下运行。
 _INLINE_COMMENT = re.compile(r'\s+#.*$')
 
@@ -52,7 +62,8 @@ def _load_dotenv(path: Path) -> None:
         os.environ.setdefault(key, value)
 
 
-if not os.environ.get('CAD_RULE_CHECKER_SKIP_DOTENV'):
+if not (os.environ.get(ENV_PREFIX + 'SKIP_DOTENV')
+        or os.environ.get(LEGACY_ENV_PREFIX + 'SKIP_DOTENV')):
     _load_dotenv(PROJECT_ROOT / '.env')
 
 
@@ -90,8 +101,19 @@ class Settings:
         return default if node is None else node
 
     def _read_env(self, env_key, default: str = '') -> str:
-        value = os.getenv(env_key)
-        return value if value not in (None, "") else default
+        """读取环境变量，兼容旧前缀。
+
+        ``env_key`` 使用新前缀（``CAD2GRAPH_*``）；若为空，会再尝试对应的
+        旧名称（``CAD_RULE_CHECKER_*``）以保持向后兼容。
+        """
+        candidates = [env_key]
+        if env_key.startswith(ENV_PREFIX):
+            candidates.append(LEGACY_ENV_PREFIX + env_key[len(ENV_PREFIX):])
+        for key in candidates:
+            value = os.getenv(key)
+            if value not in (None, ""):
+                return value
+        return default
 
     @overload
     def _resolve_path(self, value: None, base_dir=None) -> None: ...
@@ -151,12 +173,6 @@ class Settings:
         return self._resolve_path(path_str)
 
     @property
-    def violations_dir(self):
-        """违规报告目录"""
-        path_str = self._get_value('output', 'violations', 'output/violations')
-        return self._resolve_path(path_str)
-
-    @property
     def viz_dir(self):
         """可视化图片目录（CDT/SVG 实例/实验/GT 预览）"""
         path_str = self._get_value('output', 'viz', 'output/viz')
@@ -181,60 +197,54 @@ class Settings:
         return self._resolve_path(path_str)
 
     @property
-    def rules_dir(self) -> Path:
-        """SHACL 规则目录"""
-        path_str: str = self._cfg.get('rules', 'rules')
-        return self._resolve_path(path_str)
-
-    @property
     def prompt_config_dir(self):
         path_str = self._get_value('prompt', 'prompt_config_dir', 'prompt/prompt_config.txt')
         return self._resolve_path(path_str)
 
     @property
     def run_mode(self):
-        return self._read_env('CAD_RULE_CHECKER_RUN_MODE', self._get_value('runtime', 'run_mode', 'SINGLE')).upper()
+        return self._read_env('CAD2GRAPH_RUN_MODE', self._get_value('runtime', 'run_mode', 'SINGLE')).upper()
 
     @property
     def runtime_target_dir(self):
-        return self._read_env('CAD_RULE_CHECKER_TARGET_DIR', self._get_value('runtime', 'target_dir', ''))
+        return self._read_env('CAD2GRAPH_TARGET_DIR', self._get_value('runtime', 'target_dir', ''))
 
     @property
     def runtime_target_file(self):
-        return self._read_env('CAD_RULE_CHECKER_TARGET_FILE', self._get_value('runtime', 'target_file', 'sample.svg'))
+        return self._read_env('CAD2GRAPH_TARGET_FILE', self._get_value('runtime', 'target_file', 'sample.svg'))
 
     @property
     def runtime_output_dir(self):
-        path_str = self._read_env('CAD_RULE_CHECKER_OUTPUT_DIR', self._get_value('runtime', 'jsonld_dir', 'output/jsonld'))
+        path_str = self._read_env('CAD2GRAPH_OUTPUT_DIR', self._get_value('runtime', 'jsonld_dir', 'output/jsonld'))
         return self._resolve_path(path_str)
 
     @property
     def sample_input_jsonld(self):
-        return self._read_env('CAD_RULE_CHECKER_SAMPLE_INPUT_JSONLD', self._get_value('runtime', 'sample_input_jsonld', 'apartment_semantic_suites.jsonld'))
+        return self._read_env('CAD2GRAPH_SAMPLE_INPUT_JSONLD', self._get_value('runtime', 'sample_input_jsonld', 'apartment_semantic_suites.jsonld'))
 
     @property
     def sample_output_jsonld(self):
-        return self._read_env('CAD_RULE_CHECKER_SAMPLE_OUTPUT_JSONLD', self._get_value('runtime', 'sample_output_jsonld', 'apartment_semantic_suites_geo.json'))
+        return self._read_env('CAD2GRAPH_SAMPLE_OUTPUT_JSONLD', self._get_value('runtime', 'sample_output_jsonld', 'apartment_semantic_suites_geo.json'))
 
     @property
     def sample_visualization_input(self):
-        return self._read_env('CAD_RULE_CHECKER_SAMPLE_VIS_INPUT', self._get_value('runtime', 'sample_visualization_input', '北京保利140+135.jsonld'))
+        return self._read_env('CAD2GRAPH_SAMPLE_VIS_INPUT', self._get_value('runtime', 'sample_visualization_input', '北京保利140+135.jsonld'))
 
     @property
     def sample_visualization_output(self):
-        return self._read_env('CAD_RULE_CHECKER_SAMPLE_VIS_OUTPUT', self._get_value('runtime', 'sample_visualization_output', '北京保利140+135.png'))
+        return self._read_env('CAD2GRAPH_SAMPLE_VIS_OUTPUT', self._get_value('runtime', 'sample_visualization_output', '北京保利140+135.png'))
 
     @property
     def llm_api_key(self):
-        return self._read_env('CAD_RULE_CHECKER_LLM_API_KEY', self._get_value('llm', 'api_key', ''))
+        return self._read_env('CAD2GRAPH_LLM_API_KEY', self._get_value('llm', 'api_key', ''))
 
     @property
     def llm_base_url(self):
-        return self._read_env('CAD_RULE_CHECKER_LLM_BASE_URL', self._get_value('llm', 'base_url', 'https://open.bigmodel.cn/api/paas/v4/'))
+        return self._read_env('CAD2GRAPH_LLM_BASE_URL', self._get_value('llm', 'base_url', 'https://open.bigmodel.cn/api/paas/v4/'))
 
     @property
     def llm_model(self):
-        return self._read_env('CAD_RULE_CHECKER_LLM_MODEL', self._get_value('llm', 'model', 'glm-4-flash'))
+        return self._read_env('CAD2GRAPH_LLM_MODEL', self._get_value('llm', 'model', 'glm-4-flash'))
 
     # ==========================================
     # 空间语义算法 (Spatial Algorithms) 配置
@@ -243,7 +253,7 @@ class Settings:
     def spatial_contour_algorithm(self):
         """空间轮廓提取算法名（见 src/spatial/registry.py）"""
         return self._read_env(
-            'CAD_RULE_CHECKER_CONTOUR_ALGO',
+            'CAD2GRAPH_CONTOUR_ALGO',
             self._get_nested_value('spatial', 'contour.algorithm', ''),
         )
 
@@ -261,7 +271,7 @@ class Settings:
     def spatial_classifier_algorithm(self):
         """空间类型识别算法名（见 src/spatial/registry.py）"""
         return self._read_env(
-            'CAD_RULE_CHECKER_CLASSIFIER_ALGO',
+            'CAD2GRAPH_CLASSIFIER_ALGO',
             self._get_nested_value('spatial', 'classification.algorithm', ''),
         )
 
@@ -300,12 +310,6 @@ class Settings:
     def eval_sys_svg(self):
         """系统输入 SVG 文件路径（可选，相对项目根目录）"""
         val = self._get_value('evaluation', 'sys_svg', '')
-        return self._resolve_path(val) if val else None
-
-    @property
-    def eval_violations_json(self):
-        """系统违规报告 JSON 文件路径（可选，相对项目根目录）"""
-        val = self._get_value('evaluation', 'violations_json', '')
         return self._resolve_path(val) if val else None
 
     def resolve_runtime_target_path(self, target_dir=None, target_file=None):

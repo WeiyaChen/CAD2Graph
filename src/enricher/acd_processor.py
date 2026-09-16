@@ -9,12 +9,18 @@ from shapely.affinity import scale
 
 
 class ACDProcessor:
-    def __init__(self, graph_dict):
+    def __init__(self, graph_dict, *, enabled: bool = True, verbose: bool = True):
         """
         初始化近似凸分解处理器
         :param graph_dict: 已经过大模型语义富化的 JSON-LD 知识图谱字典
+        :param enabled: 是否允许切分。这是 ``LLMMultiStage`` 方法的**创新能力**，
+            只有自带该能力的分类器（``supports_composite_split=True``）才置 True。
+            关闭时 :meth:`process` 原样返回图谱 —— 这样 ``SAGE-E`` / ``TextMatching``
+            等基线不会被"白送"一个它们没有的能力。
         """
         self.graph = graph_dict
+        self.enabled = bool(enabled)
+        self.verbose = bool(verbose)
         self.nodes = {node.get("@id"): node for node in self.graph.get("@graph", [])}
 
     def _is_composite_space(self, node):
@@ -167,6 +173,11 @@ class ACDProcessor:
         return overlap_len > min_overlap
 
     def process(self):
+        if not self.enabled:
+            if self.verbose:
+                print("[ACD] 已关闭（当前分类器不声明 supports_composite_split）"
+                      "—— 原样返回图谱")
+            return self.graph
         composite_nodes = [n for n in self.graph.get("@graph", []) if self._is_composite_space(n)]
         if not composite_nodes:
             return self.graph

@@ -53,10 +53,21 @@ coverage.xml
 .env
 .env.local
 .env.*.local
+# every .env variant (e.g. .env.bak / .env.production) ...
+.env.*
+# ... except the documented template, which must stay tracked
+!.env.example
 *.py.cover
 .hypothesis/
 .pytest_cache/
 cover/
+
+# === SAGE-E baseline 的派生数据 ===
+# RoomGraph 的 numpy 转储（由 scripts/export_roomgraph.py 从 submodule 生成，
+# 秒级可重建，不入库）；权重的 .npz 同理（scripts/train_sagee.py --export-weights）
+data/
+# 训练产物（与 third_party/VecFloorSeg 的 results/ 一致）
+results/
 
 # Translations
 *.mo
@@ -191,9 +202,10 @@ cython_debug/
 # Visual Studio Code
 #  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the entire vscode folder
-# .vscode/
+#  and can be added to the global gitignore or merged into this file.
+# 整个 .vscode/ 都忽略：里面的 tasks.json 是临时诊断任务，属于本地状态，不该入库。
+#  （若将来确实要共享 launch.json / settings.json，再用 `!.vscode/launch.json` 之类单独放行。）
+.vscode/
 
 # Ruff stuff:
 .ruff_cache/

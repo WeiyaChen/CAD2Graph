@@ -1,0 +1,6 @@
+[submodule "third_party/VecFloorSeg"]
+	path = third_party/VecFloorSeg
+	url = https://github.com/DrZiji/VecFloorSeg.git
+[submodule "third_party/SAGE-E"]
+	path = third_party/SAGE-E
+	url = https://github.com/ZijianWang-ZW/SAGE-E.git

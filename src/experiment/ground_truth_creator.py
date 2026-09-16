@@ -5,7 +5,6 @@ import sys
 import json
 import traceback
 from pathlib import Path
-from typing import Any, cast
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,13 +29,6 @@ try:
     from ezdxf.filemanagement import readfile
 except ImportError:
     print("❌ Missing ezdxf library. Please run: pip install ezdxf")
-    sys.exit(1)
-
-try:
-    from rdflib import Graph
-    from pyshacl import validate
-except ImportError:
-    print("❌ Missing rdflib or pyshacl library. Please run: pip install rdflib pyshacl")
     sys.exit(1)
 
 # =====================================================================
@@ -166,7 +158,7 @@ def get_min_topology_distance(start_node, target_semantics, rooms_data):
 # Main build flow
 # =====================================================================
 def build_graph_from_dxf(dxf_input=None):
-    """Process a single annotated DXF drawing and generate GT JSON-LD / violation baseline / topology visualization.
+    """Process a single annotated DXF drawing and generate GT JSON-LD and topology visualization.
 
     Args:
         dxf_input: Path to the DXF file. When None, enters interactive mode where user drags in input.
@@ -543,79 +535,8 @@ def build_graph_from_dxf(dxf_input=None):
 
     out_path = os.path.join(ground_truth_dir, out_filename)
 
-    # =====================================================================
-    # Phase 4.5: Auto-execute SHACL rule validation to generate violation GT
-    # =====================================================================
-    print("⚖️ Phase 4.5: Auto-executing SHACL rule validation, generating violation Ground Truth...")
-    violations_list = []
-    try:
-        data_graph = Graph()
-        data_graph.parse(data=json.dumps(jsonld_output, ensure_ascii=False), format="json-ld")
-
-        target_shacl_files = [
-            "l1_semantic_check.ttl",
-            "l2_geometric_check.ttl",
-            "l3_topological_check.ttl"
-        ]
-
-        for shacl_file in target_shacl_files:
-            shacl_file_path = os.path.join(str(settings.rules_dir), shacl_file)
-            if not os.path.exists(shacl_file_path):
-                continue
-
-            shacl_graph = Graph()
-            shacl_graph.parse(shacl_file_path, format="turtle")
-
-            conforms, results_graph, _ = validate(
-                data_graph,
-                shacl_graph=shacl_graph,
-                inference='rdfs',
-                abort_on_first=False,
-                meta_shacl=False,
-                debug=False
-            )
-
-            if not conforms:
-                query = """
-                    PREFIX sh: <http://www.w3.org/ns/shacl#>
-                    SELECT ?focusNode ?message ?sourceShape
-                    WHERE {
-                        ?report a sh:ValidationReport ;
-                                sh:result ?result .
-                        ?result sh:focusNode ?focusNode ;
-                                sh:resultMessage ?message ;
-                                sh:sourceShape ?sourceShape .
-                    }
-                """
-                violations = cast(Any, results_graph).query(query)
-                for row in violations:
-                    v_node_id = str(row.focusNode).split('/')[-1]
-                    v_msg = str(row.message)
-                    v_rule = str(row.sourceShape).split('/')[-1] if row.sourceShape else "UnknownRule"
-
-                    violations_list.append({
-                        "node_id": v_node_id,
-                        "message": v_msg,
-                        "rule": v_rule
-                    })
-
-        print(f"  [+] Successfully extracted {len(violations_list)} compliance violations as experimental baseline.")
-    except Exception as e:
-        print(f"  [-] SHACL validation engine execution error: {e}")
-
-    jsonld_output["violations"] = violations_list
-
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(jsonld_output, f, ensure_ascii=False, indent=2)
-
-    out_vio_filename = f"{base_name}_gt_violations.json"
-
-    target_dir = str(settings.violations_dir)
-    os.makedirs(target_dir, exist_ok=True)
-
-    out_vio_path = os.path.join(target_dir, out_vio_filename)
-    with open(out_vio_path, 'w', encoding='utf-8') as f:
-        json.dump(violations_list, f, ensure_ascii=False, indent=2)
 
     # Compute the number of topology-connected edges (undirected graph edges = total degree // 2)
     total_edges = sum(len(room['adjacencies']) for room in rooms_data.values()) // 2
@@ -627,7 +548,6 @@ def build_graph_from_dxf(dxf_input=None):
     print(f"  - Topology Edges:               {total_edges}")
     # print(f"  - Functional Elements:          {len(functional_elements_data)}")
     print(f"  - Extracted Suites:             {len(suites)}")
-    # print(f"  - Violations:                   {len(violations_list)}")
     print("=" * 50 + "\n")
 
     # =====================================================================

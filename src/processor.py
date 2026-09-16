@@ -20,7 +20,6 @@ def process_single_drawing(input_svg_path, output_json_dir, llm_client,
     """
     核心原子函数：端到端解析单张 CAD/SVG 图纸（对应评估实验 Exp 1-4）。
     流程：元素提取 → 拓扑白模型构建 → 全链路语义富化 → 可视化。
-    SHACL 合规审查不在此执行，请使用 src/experiment/compliance_reviewer.py。
 
     Args:
         contour_algorithm: 空间轮廓提取算法注册名，``None`` 时使用配置文件默认值。
@@ -123,7 +122,7 @@ def process_directory(svg_dir, output_json_dir, llm_client,
         print(f"🛑 No SVG files found in directory {svg_dir}, exiting.")
         return
 
-    print(f"🔍 Found {len(svg_files)} drawings to review, starting automated batch pipeline...\n")
+    print(f"🔍 Found {len(svg_files)} drawings to parse, starting automated batch pipeline...\n")
 
     # 识别算法无逐图状态，整批复用同一实例（同时复用其内部的大模型客户端与归一化器）
     classifier = create_space_type_classifier(classifier_algorithm, llm_client=llm_client)

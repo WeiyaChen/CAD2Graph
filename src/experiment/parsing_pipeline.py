@@ -9,9 +9,8 @@
     Phase 3      拓扑可视化
 
 说明：
-- SHACL 合规审查（Exp 5）不在此入口执行，请使用 compliance_reviewer.py。
 - 本入口与 src/main.py 的解析逻辑一致，独立提供实验级入口以便与评估
-  流程严格对齐（解析只覆盖评估的前四步）。
+  流程严格对齐。
 """
 
 import argparse

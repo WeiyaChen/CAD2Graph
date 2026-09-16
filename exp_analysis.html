@@ -3,181 +3,362 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drawing Analysis · System vs GT (Experiment 2.1)</title>
+<title>Drawing Analysis · System vs GT</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; background: #f4f7fb; color: #223; }
   .hidden { display: none !important; }
-  header { background: linear-gradient(135deg, #3a1c5e, #6d3fae); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+  header { background: linear-gradient(135deg, #3a1c5e, #6d3fae); color: #fff; padding: 12px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   header a.back { color: #e4d2ff; text-decoration: none; font-size: 14px; }
-  header h1 { font-size: 20px; }
-  .wrap { display: flex; min-height: calc(100vh - 60px); }
-  .side { width: 300px; background: #fff; border-right: 1px solid #e0e6ef; padding: 18px; flex-shrink: 0; }
-  .main { flex: 1; padding: 20px; overflow: auto; }
-  h3 { font-size: 15px; margin: 14px 0 8px; color: #5b2a96; }
-  select, input[type=file] { width: 100%; padding: 8px; border: 1px solid #cfd8e3; border-radius: 6px; font-size: 14px; }
-  .btn { width: 100%; margin-top: 12px; padding: 11px; border: 0; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600; }
+  header h1 { font-size: 19px; }
+  header .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; background: #d8f5e2; color: #146c3d; }
+
+  /* ---- 顶部控制条（原来的左侧栏搬到这里，全宽）---- */
+  .topbar { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid #e0e6ef;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05); padding: 12px 24px;
+            display: flex; align-items: flex-start; gap: 18px; flex-wrap: wrap; }
+  .tb { display: flex; flex-direction: column; gap: 4px; }
+  .tb > label { font-size: 11.5px; color: #6b7a8d; font-weight: 600; letter-spacing: .3px; }
+  .tb-row { display: flex; align-items: center; gap: 8px; }
+  select, input[type=file] { padding: 7px 9px; border: 1px solid #cfd8e3; border-radius: 6px; font-size: 13px;
+                             font-family: inherit; background: #fff; color: #223; }
+  select { min-width: 260px; }
+  input[type=file] { max-width: 240px; font-size: 12px; }
+  .btn { padding: 8px 16px; border: 0; border-radius: 8px; cursor: pointer; font-size: 13.5px; font-weight: 600; white-space: nowrap; }
   .btn.primary { background: #5b2a96; color: #fff; }
   .btn.primary:hover { background: #48217a; }
   .btn.ghost { background: #f0eaf9; color: #5b2a96; }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .log { background: #0d1b2a; color: #9fe8af; font-family: Consolas, monospace; font-size: 12px; padding: 12px; border-radius: 8px; max-height: 180px; overflow: auto; white-space: pre-wrap; margin-top: 14px; }
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; }
+  .tb .runspec { font-size: 11.5px; color: #7a8aa0; line-height: 1.5; }
+
+  .log { flex: 1 1 320px; min-width: 260px; background: #0d1b2a; color: #9fe8af;
+         font-family: Consolas, monospace; font-size: 12px; padding: 10px 12px; border-radius: 8px;
+         height: 96px; overflow: auto; white-space: pre-wrap; }
+
+  .main { padding: 20px 24px 40px; }
+
+  h3 { font-size: 15px; margin: 14px 0 8px; color: #5b2a96; }
   .card { background: #fff; border-radius: 10px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
   .card h4 { font-size: 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
   .card .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .dot.sys { background: #2a8fbd; } .dot.gt { background: #27ae60; }
+  .card pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; font-size: 11px; max-height: 260px; overflow: auto; white-space: pre-wrap; }
+  .summary-card { margin-top: 14px; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 12px; }
   .kg-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
   .kg-pane { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; }
   .kg-pane .ph { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #eef1f5; font-size: 14px; font-weight: 600; }
   .kg-pane .ph .st { margin-left: auto; font-size: 11px; color: #8a97a8; font-weight: 400; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .kg-pane iframe { width: 100%; height: 760px; border: 0; display: block; background: #fff; }
-  .card pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; font-size: 11px; max-height: 260px; overflow: auto; white-space: pre-wrap; }
-  .sub { font-size: 12px; color: #5b2a96; font-weight: 600; margin: 12px 0 4px; }
-  .summary-card { margin-top: 18px; }
+  .kg-inline { border: 1px solid #e4e9f0; border-radius: 8px; overflow: hidden; background: #fff; }
+  .kg-inline iframe { width: 100%; height: 620px; border: 0; display: block; }
+  .kg-inline .ph { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid #eef1f5; font-size: 12.5px; font-weight: 600; color: #5b2a96; }
+  .kg-inline .ph .st { margin-left: auto; font-size: 10.5px; color: #8a97a8; font-weight: 400; }
+
   .diff-table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 6px; }
   .diff-table th, .diff-table td { border: 1px solid #e4e9f0; padding: 6px 10px; text-align: left; }
   .diff-table th { background: #f0eaf9; color: #5b2a96; }
   .diff-table td.pos { color: #146c3d; }
   .diff-table td.neg { color: #b3261e; }
   .diff-table td.dim { color: #9aa7b5; }
+
   .note { background: #fdf6e3; border: 1px solid #eedd9a; color: #6b5d13; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 14px; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; }
-  .badge.ok { background: #d8f5e2; color: #146c3d; }
+  .stage-label { font-size: 13.5px; font-weight: 700; color: #5b2a96; margin: 26px 0 8px; letter-spacing: .3px; }
+  .stage-label:first-child { margin-top: 0; }
   .empty { color: #7a8aa0; font-size: 13px; }
   .zoom-hint { font-size: 11px; color: #8a97a8; margin-top: 4px; }
+  .hint { font-size: 12px; color: #7a8aa0; margin: 6px 0 0; }
+
+  /* ---- 综合比较表 ---- */
+  .bench-table { border-collapse: collapse; width: 100%; font-size: 12.5px; margin-top: 8px; }
+  .bench-table th, .bench-table td { border: 1px solid #e4e9f0; padding: 5px 9px; text-align: right; font-variant-numeric: tabular-nums; }
+  .bench-table th:first-child, .bench-table td:first-child { text-align: left; font-variant-numeric: normal; }
+  .bench-table th { background: #f0eaf9; color: #5b2a96; white-space: nowrap; }
+  .bench-table td.best { background: #eaf7ee; font-weight: 700; color: #146c3d; }
+  .bench-table td.dim { color: #a0aab6; }
+
+  /* ---- 个例行：顶部信息条（紧凑）+ 下方全宽大图 / 图谱 ---- */
+  .rowitem { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06);
+             padding: 12px 14px; margin-top: 12px; }
+  .rhead { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 16px;
+           border-bottom: 1px solid #eef1f5; padding-bottom: 8px; margin-bottom: 10px; }
+  .rhead h5 { font-size: 15px; color: #5b2a96; }
+  .rhead .sub { font-size: 11.5px; color: #8a97a8; }
+  .rhead .metrics { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-left: auto; }
+  .rhead a.raw { font-size: 11.5px; color: #5b2a96; text-decoration: none; border-bottom: 1px dotted #b9a6d8; }
+  .rbody { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+  .rbody.split { grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); }
+  .mline { display: flex; gap: 6px; font-size: 12px; color: #4a5568; }
+  .mline b { color: #223; font-variant-numeric: tabular-nums; }
+  .rbody img.bimg { width: 100%; border-radius: 8px; border: 1px solid #eef1f5; background: #fff; display: block; }
+  .nofix { font-size: 12px; color: #a0aab6; padding: 40px 6px; text-align: center; background: #fafbfd; border-radius: 8px; border: 1px dashed #e0e6ef; }
+
+  .minicount { border-collapse: collapse; width: 100%; font-size: 11.5px; margin-top: 10px; }
+  .minicount th, .minicount td { border: 1px solid #eef1f5; padding: 2px 6px; text-align: right; }
+  .minicount th:first-child, .minicount td:first-child { text-align: left; }
+  .minicount th { background: #f7f9fc; color: #6b7a8d; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .rbody.split { grid-template-columns: minmax(0, 1fr); }
+    .rhead .metrics { margin-left: 0; }
+    .compare, .kg-pair { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 <header>
   <a class="back" href="index.html">← Back</a>
-  <h1>Drawing Analysis · System vs GT (Experiment 2.1)</h1>
-  <span class="badge ok">Single DXF · Side-by-side comparison</span>
+  <h1>Drawing Analysis · System vs GT</h1>
+  <span class="badge">所有算法全部运行 · 综合比较 + 个例查看</span>
 </header>
-<div class="wrap">
-  <div class="side">
-    <h3>① Select or Upload DXF</h3>
-    <select id="dxfSelect"></select>
-    <input type="file" id="dxfFile" accept=".dxf" style="margin-top:8px">
-    <button class="btn ghost" id="uploadBtn" onclick="uploadDxf()">Upload Selected DXF</button>
 
-    <h3>② Spatial Algorithms</h3>
-    <div id="algoSlot"></div>
+<!-- ============ 顶部控制条 ============ -->
+<div class="topbar">
+  <div class="tb">
+    <label>① 选择图纸</label>
+    <div class="tb-row">
+      <select id="dxfSelect"></select>
+    </div>
+  </div>
+  <div class="tb">
+    <label>或上传 DXF</label>
+    <div class="tb-row">
+      <input type="file" id="dxfFile" accept=".dxf">
+      <button class="btn ghost" onclick="uploadDxf()">上传</button>
+    </div>
+  </div>
+  <div class="tb">
+    <label>② 运行全部算法</label>
+    <div class="tb-row">
+      <button class="btn primary" id="runBtn" onclick="runAll()">▶ 运行全部算法</button>
+    </div>
+    <div class="runspec" id="runSpec">任务 1：CDT / RGP / VecFloorSeg（NoOp 分类器）<br>任务 2：LLMMultiStage / SAGEE / TextMatching（统一 GT 轮廓）</div>
+  </div>
+  <div class="log" id="log">就绪。选择图纸后，下方面板会直接从 output/bench 读取已有结果； 点「运行全部算法」可为当前图纸重跑全部算法（SAGEE 走折外模型，避免样本内虚高）。</div>
+</div>
 
-    <h3>③ Start Comparison</h3>
-    <button class="btn primary" id="runBtn" onclick="runCompare()">Start Comparison</button>
-    <p style="font-size:12px;color:#7a8aa0;margin-top:6px">The system parses the selected DXF and automatically matches the corresponding Ground Truth annotation by name.</p>
+<div class="main">
+  <div class="note hidden" id="gtNote"></div>
 
-    <div class="log" id="log">Waiting for action…</div>
+  <!-- ============ ① 全库综合比较 ============ -->
+  <div class="stage-label">① 两项任务综合比较（全库 39 张）</div>
+  <div class="card summary-card" style="margin-top:0">
+    <h4>📐 任务 1 · 空间轮廓提取</h4>
+    <div id="task1Table" class="empty">Loading…</div>
+    <p class="hint"><b>GT（自检）</b>不参评 —— 它拿 GT 轮廓对 GT 自己，覆盖率/一对率/mIoU 应当 ≈1.0，
+      用来证明匹配与指标实现无误；这一行不是 1.0 就说明评估代码有 bug。</p>
+    <h4 style="margin-top:18px">🏷️ 任务 2 · 空间类型识别（统一在 GT 轮廓上）</h4>
+    <div id="task2Table" class="empty">Loading…</div>
+    <h4 style="margin-top:18px">任务 2 · 逐 GT 类别 F1</h4>
+    <div id="perClassTable" class="empty">Loading…</div>
+    <p class="hint">绿色 = 该类别最好。挑方法时优先看你在意的类别，而不是只看总平均。</p>
+    <p class="hint">数据源 <code>output/bench/scores.json</code>（由 <code>scripts/evaluate_benchmark.py</code> 生成）。</p>
   </div>
 
-  <div class="main">
-    <div class="note hidden" id="gtNote"></div>
-    <div class="compare">
-      <div class="card">
-        <h4><span class="dot sys"></span>System Topology</h4>
-        <img id="sysTopo" class="zoomable hidden" alt="System topology">
-        <p id="sysTopoEmpty" class="empty">System topology appears here after running.</p>
-        <div class="zoom-hint">Scroll to zoom · drag to pan · double-click to reset</div>
-      </div>
-      <div class="card">
-        <h4><span class="dot gt"></span>GT Topology</h4>
-        <img id="gtTopo" class="zoomable hidden" alt="GT topology">
-        <p id="gtTopoEmpty" class="empty">GT topology appears here after running.</p>
-        <div class="zoom-hint">Scroll to zoom · drag to pan · double-click to reset</div>
-      </div>
-    </div>
+  <!-- ============ ② 任务 1 个例 ============ -->
+  <div class="stage-label">② 任务 1 · 空间轮廓提取 —— 逐个算法（当前图纸）</div>
+  <p class="hint">轮廓数值取自 <code>_raw.jsonld</code>（语义富化<strong>之前</strong>写出的图），因此与用哪个分类器无关 ——
+    这才是"提取出来的轮廓"本身。每张图都可以<strong>滚轮缩放、拖拽平移、双击复位</strong>。</p>
+  <div id="contourRows"></div>
 
-    <div class="card summary-card hidden" id="contourCard">
-      <h4>🧩 System Space Contour Extraction · <span id="contourAlgoName">—</span></h4>
-      <img id="sysContour" class="zoomable hidden" alt="System space contour extraction">
-      <p id="sysContourEmpty" class="empty">The extracted space contours appear here after running.</p>
+  <!-- ============ ③ 任务 2 个例 ============ -->
+  <div class="stage-label">③ 任务 2 · 空间类型识别 —— 逐个方法，统一跑在 GT 轮廓上（当前图纸）</div>
+  <p class="hint">三者起点相同才算有效 ablation。<code>SAGEE</code> 用<strong>折外</strong>模型（每张图都没被训练见过），
+    另外两种天然零样本。右侧是该方法的<strong>知识图谱</strong>（全图 / 富化过程 / 套型从属三个页签）。</p>
+  <div id="typeRows"></div>
+
+  <!-- ============ ④ 系统最终结果 vs GT ============ -->
+  <div class="stage-label">④ 系统最终结果 vs GT · Topology / Knowledge Graph</div>
+  <div class="compare">
+    <div class="card">
+      <h4><span class="dot sys"></span>System Topology</h4>
+      <img id="sysTopo" class="zoomable hidden" alt="System topology">
+      <p id="sysTopoEmpty" class="empty">点上方「运行全部算法」后出现。</p>
       <div class="zoom-hint">Scroll to zoom · drag to pan · double-click to reset</div>
     </div>
-
-    <div class="card summary-card hidden" id="summaryCard">
-      <h4>📊 System vs GT Difference Summary</h4>
-      <table class="diff-table" id="diffTable"></table>
-      <h4 style="margin-top:16px">Semantic Type Counts</h4>
-      <table class="diff-table" id="semTable"></table>
-    </div>
-
-    <div class="card summary-card hidden" id="kgCompareCard">
-      <h4>🕸️ System vs GT · JSON-LD Knowledge Graph</h4>
-      <div class="kg-pair">
-        <div class="kg-pane">
-          <div class="ph"><span class="dot sys"></span>System KG <span class="st" id="kgSysSt">—</span></div>
-          <iframe id="kgSysFrame" src="about:blank"></iframe>
-        </div>
-        <div class="kg-pane">
-          <div class="ph"><span class="dot gt"></span>GT KG <span class="st" id="kgGtSt">—</span></div>
-          <iframe id="kgGtFrame" class="hidden" src="about:blank"></iframe>
-          <div id="kgGtEmpty" class="empty hidden">No matching GT.</div>
-        </div>
-      </div>
-      <div class="zoom-hint">Each pane is the interactive Knowledge Graph browser（全图 / 富化过程 / 套型从属）。要回放富化过程阶段，请在 Knowledge Graph Browser 工具中打开系统图谱。</div>
+    <div class="card">
+      <h4><span class="dot gt"></span>GT Topology</h4>
+      <img id="gtTopo" class="zoomable hidden" alt="GT topology">
+      <p id="gtTopoEmpty" class="empty">GT 拓扑图（人工标注）。</p>
+      <div class="zoom-hint">Scroll to zoom · drag to pan · double-click to reset</div>
     </div>
   </div>
+
+  <div class="card summary-card hidden" id="summaryCard">
+    <h4>📊 System vs GT Difference Summary</h4>
+    <table class="diff-table" id="diffTable"></table>
+    <h4 style="margin-top:16px">Semantic Type Counts</h4>
+    <table class="diff-table" id="semTable"></table>
+  </div>
+
+  <div class="card summary-card hidden" id="kgCompareCard">
+    <h4>🕸️ System vs GT · JSON-LD Knowledge Graph</h4>
+    <div class="kg-pair">
+      <div class="kg-pane">
+        <div class="ph"><span class="dot sys"></span>System KG <span class="st" id="kgSysSt">—</span></div>
+        <iframe id="kgSysFrame" src="about:blank"></iframe>
+      </div>
+      <div class="kg-pane">
+        <div class="ph"><span class="dot gt"></span>GT KG <span class="st" id="kgGtSt">—</span></div>
+        <iframe id="kgGtFrame" class="hidden" src="about:blank"></iframe>
+        <div id="kgGtEmpty" class="empty hidden">No matching GT.</div>
+      </div>
+    </div>
+    <div class="zoom-hint">Each pane is the interactive Knowledge Graph browser（全图 / 富化过程 / 套型从属）。</div>
+  </div>
 </div>
+
 <script src="ui_common.js"></script>
 <script>
+  // =========================================================================
+  // 页面结构（自 2026-09-15 重排）
+  //   顶部控制条：选图纸 / 上传 / 一键跑全部算法（不再有算法下拉框 —— 见下方 RUN_PLAN）
+  //   ① 全库综合比较  ② 任务1 个例（逐算法一行，图可缩放平移）
+  //   ③ 任务2 个例（逐方法一行 + 该方法的图谱）  ④ 系统最终结果 vs GT
+  // =========================================================================
   const logEl = document.getElementById('log');
-  function log(msg) { logEl.textContent += (logEl.textContent ? '\n' : '') + msg; logEl.scrollTop = logEl.scrollHeight; }
+  function log(msg) {
+    logEl.textContent += (logEl.textContent ? '\n' : '') + msg;
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+  function clearLog() { logEl.textContent = ''; }
+
+  /** 基准矩阵：与 scripts/run_benchmark.py 的 RUNS 一一对应（改名要两边一起改）
+   *  ⚠️ SAGEE 单独走 holdout 分支：必须用「没见过这张图」的那一折模型，
+   *     直接用部署模型跑出来的是**样本内**结果（实测虚高 17 个百分点，见 docs §6.1）。 */
+  const RUN_PLAN = [
+    { dir: 'output/bench/contour_CDT',         contour: 'CDT',         clf: 'NoOp',          task: '任务1' },
+    { dir: 'output/bench/contour_RGP',         contour: 'RGP',         clf: 'NoOp',          task: '任务1' },
+    { dir: 'output/bench/contour_VecFloorSeg', contour: 'VecFloorSeg', clf: 'NoOp',          task: '任务1' },
+    { dir: 'output/bench/type_TextMatching',   contour: 'GT',          clf: 'TextMatching',  task: '任务2' },
+    { dir: 'output/bench/type_SAGEE',          contour: 'GT',          clf: 'SAGEE',         task: '任务2', holdout: true },
+    { dir: 'output/bench/type_LLMMultiStage',  contour: 'GT',          clf: 'LLMMultiStage', task: '任务2' },
+  ];
+  /** 折外模型的折表（由 scripts/train_sagee.py --emit-folds 生成） */
+  const FOLDS_DIR = 'data/holdout_gtc';
+  /** ④ 用哪份结果当"系统最终结果"（最后跑的那个 = 能力最全的那个） */
+  const FINAL_RUN_DIR = 'output/bench/type_LLMMultiStage';
+
+  const CONTOUR_METHODS = [
+    { key: 'CDT',         label: 'CDT',          suffix: 'cdt',         note: '约束德劳内三角剖分' },
+    { key: 'RGP',         label: 'RGP',          suffix: 'rgp',         note: '几何规则多边形化' },
+    { key: 'VecFloorSeg', label: 'VecFloorSeg',  suffix: 'vecfloorseg', note: '深度学习（当前权重欠训练）' },
+    { key: 'GT(自检)',    label: 'GT（参照基准）', suffix: 'gt',          note: '人工标注本身 —— 不是方法' },
+  ];
+  const TYPE_METHODS = [
+    { key: 'LLMMultiStage', label: 'LLMMultiStage', note: '文字 + 大模型常识 + ACD 切分', tag: 'llm' },
+    { key: 'SAGEE',         label: 'SAGEE',         note: '纯几何+拓扑（折外模型）',      tag: 'sagee' },
+    { key: 'TextMatching',  label: 'TextMatching',  note: '仅文字词典匹配',              tag: 'text' },
+  ];
+
+  let BENCH = null;
+  const pct = v => (v === undefined || v === null) ? '—' : (v * 100).toFixed(1) + '%';
+  const fix = (v, n) => (v === undefined || v === null) ? '—' : Number(v).toFixed(n === undefined ? 3 : n);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const previewUrl = p => '/api/preview?path=' + encodeURIComponent(p);
+
+  /** '2suite (1).dxf' -> '2suite (1)' */
+  function baseOf(v) { return String(v || '').replace(/\.(dxf|svg)$/i, ''); }
+  /** '2suite (1)' -> '2suite#1'（与 scores.json 的 per_drawing 键一致） */
+  function baseToKey(base) {
+    const m = /^(.+?)\s*\((\d+)\)\s*$/.exec(base || '');
+    return m ? m[1] + '#' + m[2] : (base || '');
+  }
+  /** '2suite_annotated (1)_gt.jsonld' -> '2suite_annotated (1)_gt' */
+  function stemOf(path) { return path ? String(path).replace(/^.*\//, '').replace(/\.jsonld$/i, '') : ''; }
+
+  // ------------------------------------------------------------------ 通用
   function showImg(path, imgId, emptyId) {
     const img = document.getElementById(imgId), empty = document.getElementById(emptyId);
     if (!img || !empty) return;
     if (!path) { img.classList.add('hidden'); empty.classList.remove('hidden'); empty.textContent = '(No corresponding result)'; return; }
     img.onload = () => { img.classList.remove('hidden'); empty.classList.add('hidden'); };
-    img.src = '/api/preview?path=' + encodeURIComponent(path);
+    img.onerror = () => { img.classList.add('hidden'); empty.classList.remove('hidden'); empty.textContent = '图片不存在：' + path; };
+    img.src = previewUrl(path);
   }
+
   function loadDxfs() {
-    fetch('/api/available-dxfs').then(r => r.json()).then(d => {
+    return fetch('/api/available-dxfs').then(r => r.json()).then(d => {
       const sel = document.getElementById('dxfSelect');
       sel.innerHTML = '';
       (d.dxfFiles || []).forEach(f => { const o = document.createElement('option'); o.value = f; o.textContent = f; sel.appendChild(o); });
-      if (sel.options.length) log('Loaded ' + sel.options.length + ' DXF files');
+      sel.onchange = () => { ensureBench().then(() => loadIndividual(baseOf(sel.value))).catch(e => log('加载失败: ' + e.message)); };
+      if (sel.options.length) log('已加载 ' + sel.options.length + ' 个 DXF');
     }).catch(e => log('Load failed: ' + e));
   }
+
   function uploadDxf() {
     const input = document.getElementById('dxfFile');
-    if (!input.files || !input.files.length) { log('Please choose a DXF to upload'); return; }
+    if (!input.files || !input.files.length) { log('请先选择一个 DXF 文件'); return; }
     const fd = new FormData(); fd.append('targetDir', '');
     Array.from(input.files).forEach(f => fd.append('file', f));
-    log('Uploading…');
-    fetch('/api/upload-dxf', { method: 'POST', body: fd }).then(r => r.json()).then(d => { log('Uploaded: ' + (d.saved || []).join(', ')); loadDxfs(); }).catch(e => log('Upload failed: ' + e));
+    log('上传中…');
+    fetch('/api/upload-dxf', { method: 'POST', body: fd }).then(r => r.json())
+      .then(d => { log('已上传: ' + (d.saved || []).join(', ')); loadDxfs(); })
+      .catch(e => log('Upload failed: ' + e));
   }
-  function runCompare() {
+
+  // ------------------------------------------------- ② 一键运行全部算法
+  async function runAll() {
     const dxfFile = document.getElementById('dxfSelect').value;
-    if (!dxfFile) { log('Please select a DXF file first'); return; }
+    if (!dxfFile) { log('请先选择图纸'); return; }
+    const base = baseOf(dxfFile);
     const btn = document.getElementById('runBtn');
-    btn.disabled = true; btn.textContent = 'Comparing…';
-    log('Start comparison: ' + dxfFile);
-    const algo = getSpatialAlgoSelection();
-    log('Contour: ' + algo.contourAlgo + ' · Classifier: ' + algo.classifierAlgo
-      + (algo.forceReparse ? ' · force re-parse' : ''));
-    fetch('/api/experiment-draw', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ dxfFile, outputDir: 'output/jsonld' }, algo))
-    }).then(r => r.json()).then(d => {
-      btn.disabled = false; btn.textContent = 'Start Comparison';
-      if (d.stdout) log(d.stdout.slice(0, 2000));
-      if (d.stderr) log('[stderr] ' + d.stderr.slice(0, 1000));
-      if (!d.ok) { log('❌ System parsing failed: ' + (d.error || '')); return; }
-      log('✅ Parsing complete: ' + d.base + (d.reused ? ' (reused cached result)' : ''));
-      setSpatialAlgoStatus(d);
-      const note = document.getElementById('gtNote');
-      if (d.hasGt) { note.classList.remove('hidden'); note.textContent = '✅ Ground Truth matched: ' + d.gtJsonld; }
-      else { note.classList.remove('hidden'); note.textContent = '⚠️ No matching GT found (nothing under output/gt), only the right-side hint is shown.'; }
-      showImg(d.sysTopology, 'sysTopo', 'sysTopoEmpty');
-      showImg(d.gtTopology, 'gtTopo', 'gtTopoEmpty');
-      if (d.sysContour) {
-        document.getElementById('contourCard').classList.remove('hidden');
-        document.getElementById('contourAlgoName').textContent = d.contourAlgo || '';
-        showImg(d.sysContour, 'sysContour', 'sysContourEmpty');
-      }
-      showDiffSummary(d.sysJsonld, d.gtJsonld);
-      loadKGCompare(d.base);
-    }).catch(e => { btn.disabled = false; btn.textContent = 'Start Comparison'; log('Request failed: ' + e); });
+    btn.disabled = true; clearLog();
+    log('开始为「' + base + '」运行全部 ' + RUN_PLAN.length + ' 个算法组合…');
+    let ok = 0, bad = 0;
+    for (const job of RUN_PLAN) {
+      btn.textContent = '运行中 ' + (ok + bad + 1) + '/' + RUN_PLAN.length;
+      log('[' + job.task + '] ' + job.contour + ' + ' + job.clf + '  →  ' + job.dir);
+      try {
+        let d;
+        if (job.holdout) {
+          log('   （折外模型：只跑包含该图纸的那一折留出集）');
+          const r = await fetch('/api/run-holdout-drawing', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: baseToKey(base), foldsDir: FOLDS_DIR, outDir: job.dir, contourAlgo: job.contour })
+          });
+          d = await r.json();
+          if (d.ok) log('   ✅ 折 ' + d.fold + ' · ' + (d.weights || ''));
+          else { bad++; log('   ❌ ' + String(d.error || d.stderr || '').trim().split('\n').slice(-3).join(' / ').slice(0, 400)); continue; }
+          ok++;
+          continue;
+        }
+        const r = await fetch('/api/experiment-draw', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dxfFile, outputDir: job.dir, contourAlgo: job.contour, classifierAlgo: job.clf })
+        });
+        d = await r.json();
+        if (d.ok) { ok++; log('   ✅ ' + (d.reused ? '复用已有结果' : '已解析') + (d.llmEnabled ? '' : '（LLM 未启用）')); }
+        else { bad++; log('   ❌ ' + String(d.error || d.stderr || d.stdout || 'failed').trim().split('\n').slice(-3).join(' / ').slice(0, 400)); }
+      } catch (e) { bad++; log('   ❌ 请求失败: ' + e.message); }
+    }
+    btn.disabled = false; btn.textContent = '▶ 运行全部算法';
+    log('完成：成功 ' + ok + ' / 失败 ' + bad);
+    log('⚠️ 上方的「全库综合比较」读的是 output/bench/scores.json，不会自动重算；' +
+        '要让新产物反映到汇总表，请再跑一次 python scripts/evaluate_benchmark.py --out-json output/bench/scores.json');
+    await ensureBench(true);
+    refreshFinal(base);
+    loadIndividual(base);
+  }
+
+  // --------------------------------------------- ④ 最终结果 vs GT 的刷新
+  function refreshFinal(base) {
+    const key = baseToKey(base);
+    const gtPath = (BENCH && BENCH.gt_paths && BENCH.gt_paths[key]) || null;
+    const gtStem = stemOf(gtPath);
+    showImg('output/viz/' + base + '_topology.png', 'sysTopo', 'sysTopoEmpty');
+    // ⚠️ GT 的 stem 本身就以 `_gt` 结尾（`2suite_annotated (1)_gt`），再拼 `_gt_topology`
+    //    会得到 `..._gt_gt_topology.png`。GT 拓扑图的命名规则是 `<gt_stem>_topology.png`。
+    showImg(gtStem ? 'output/viz/' + gtStem + '_topology.png' : null, 'gtTopo', 'gtTopoEmpty');
+    const note = document.getElementById('gtNote');
+    if (gtPath) { note.classList.remove('hidden'); note.textContent = '✅ 已匹配 Ground Truth：' + gtPath; }
+    else { note.classList.remove('hidden'); note.textContent = '⚠️ output/gt 下没有与该图纸配对的标注，右侧只能空着。'; log('未找到 GT：' + base); }
+    const sysJsonld = FINAL_RUN_DIR + '/' + base + '.jsonld';
+    showDiffSummary(sysJsonld, gtPath);
+    loadKGCompare(base, sysJsonld, gtPath);
   }
 
   function parseGraph(data) {
@@ -210,9 +391,10 @@
     const card = document.getElementById('summaryCard');
     if (!sysPath || !gtPath) { card.classList.add('hidden'); return; }
     Promise.all([
-      fetch('/api/preview?path=' + encodeURIComponent(sysPath)).then(r => r.json()),
-      fetch('/api/preview?path=' + encodeURIComponent(gtPath)).then(r => r.json())
+      fetch(previewUrl(sysPath)).then(r => r.ok ? r.json() : null),
+      fetch(previewUrl(gtPath)).then(r => r.ok ? r.json() : null)
     ]).then(([sys, gt]) => {
+      if (!sys || !gt) { card.classList.add('hidden'); return; }
       const s = parseGraph(sys), g = parseGraph(gt);
       const rows = [
         ['Spaces', s.spaces, g.spaces],
@@ -250,41 +432,283 @@
     box.innerHTML = html;
   }
 
-  function loadKGCompare(base) {
-    const card = document.getElementById('kgCompareCard');
-    if (!card || !base) return;
-    card.classList.remove('hidden');
-    const sysFrame = document.getElementById('kgSysFrame');
-    const gtFrame = document.getElementById('kgGtFrame');
-    const gtEmpty = document.getElementById('kgGtEmpty');
-    document.getElementById('kgSysSt').textContent = 'generating…';
-    Promise.all([
-      fetch('/api/kg-browser?base=' + encodeURIComponent(base) + '&src=system&stages=0').then(r => r.json()),
-      fetch('/api/kg-browser?base=' + encodeURIComponent(base) + '&src=gt').then(r => r.json())
-    ]).then(([sys, gt]) => {
-      if (sys.ok) {
-        document.getElementById('kgSysSt').textContent = sys.jsonld;
-        sysFrame.src = '/api/preview?path=' + encodeURIComponent(sys.html);
+  /** 生成（或复用）某个 jsonld 的 KG 浏览器并把 iframe 指过去。
+   *  dir/tag 用来区分同一张图纸在不同 run 目录下的图谱，避免互相覆盖。 */
+  function setKgFrame(frameId, stId, emptyId, params) {
+    const frame = document.getElementById(frameId);
+    const st = stId ? document.getElementById(stId) : null;
+    if (!frame) return;
+    if (st) st.textContent = 'generating…';
+    const qs = Object.keys(params).map(k => k + '=' + encodeURIComponent(params[k])).join('&');
+    fetch('/api/kg-browser?' + qs).then(r => r.json()).then(d => {
+      if (d.ok) {
+        if (st) st.textContent = d.jsonld;
+        frame.src = previewUrl(d.html);
+        frame.classList.remove('hidden');
+        if (emptyId) document.getElementById(emptyId).classList.add('hidden');
       } else {
-        document.getElementById('kgSysSt').textContent = 'error';
-        log('❌ system KG: ' + (sys.error || 'failed'));
+        if (st) st.textContent = 'error';
+        if (emptyId) {
+          frame.classList.add('hidden');
+          const e = document.getElementById(emptyId);
+          e.classList.remove('hidden');
+          e.textContent = d.error || 'KG 生成失败';
+        }
+        log('❌ KG(' + (params.tag || params.src) + '): ' + (d.error || 'failed'));
       }
-      if (gt.ok) {
-        gtEmpty.classList.add('hidden');
-        gtFrame.classList.remove('hidden');
-        document.getElementById('kgGtSt').textContent = gt.jsonld;
-        gtFrame.src = '/api/preview?path=' + encodeURIComponent(gt.html);
-      } else {
-        gtFrame.classList.add('hidden');
-        gtEmpty.classList.remove('hidden');
-        gtEmpty.textContent = 'No matching GT under output/gt for ' + base;
-        document.getElementById('kgGtSt').textContent = 'no GT';
-      }
-      log('✅ KG compare ready');
-    }).catch(e => { log('KG compare failed: ' + e); });
+    }).catch(e => { if (st) st.textContent = 'error'; log('KG 请求失败: ' + e.message); });
   }
-  loadDxfs();
-  mountSpatialAlgos('algoSlot');
+
+  function loadKGCompare(base, sysJsonld, gtPath) {
+    const card = document.getElementById('kgCompareCard');
+    if (!card) return;
+    card.classList.remove('hidden');
+    setKgFrame('kgSysFrame', 'kgSysSt', null,
+      { base: base, src: 'system', dir: FINAL_RUN_DIR, tag: 'final' });
+    if (gtPath) {
+      document.getElementById('kgGtEmpty').classList.add('hidden');
+      setKgFrame('kgGtFrame', 'kgGtSt', 'kgGtEmpty', { base: base, src: 'gt' });
+    } else {
+      document.getElementById('kgGtFrame').classList.add('hidden');
+      const e = document.getElementById('kgGtEmpty');
+      e.classList.remove('hidden'); e.textContent = 'output/gt 下没有与该图纸配对的标注';
+      document.getElementById('kgGtSt').textContent = 'no GT';
+    }
+  }
+
+  // =========================================================================
+  // 基准数据（output/bench/scores.json，由 scripts/evaluate_benchmark.py 生成）
+  // =========================================================================
+  async function ensureBench(force) {
+    if (BENCH && !force) return BENCH;
+    const r = await fetch(previewUrl('output/bench/scores.json') + '&t=' + Date.now());
+    if (!r.ok) throw new Error('output/bench/scores.json 不存在 —— 请先跑 scripts/evaluate_benchmark.py');
+    BENCH = await r.json();
+    renderAggregates();
+    return BENCH;
+  }
+
+  /** 统计一张图谱里每个空间类型出现了多少次（按标签空间的折叠规则归一后再计数）
+   *  ⚠️ 两边都要折叠：GT 里是 MainCorridor/SecondaryCorridor/PublicCorridor，
+   *     而方法侧混着分类器输出与下游拓扑细化追加的类型。不折叠就没法直接比。 */
+  async function countTypes(path, folding) {
+    if (!path) return null;
+    const fold = k => (folding && folding[k]) ? folding[k] : k;
+    try {
+      const r = await fetch(previewUrl(path));
+      if (!r.ok) return null;
+      const data = await r.json();
+      const c = {};
+      (data['@graph'] || []).forEach(n => {
+        if (!n || typeof n !== 'object') return;
+        const ts = Array.isArray(n['@type']) ? n['@type'] : (n['@type'] ? [n['@type']] : []);
+        if (ts.indexOf('bot:Space') < 0) return;
+        const b = ts.find(t => String(t).indexOf('bldg:') === 0);
+        const k = b ? fold(String(b).replace('bldg:', '')) : '（未判定）';
+        c[k] = (c[k] || 0) + 1;
+      });
+      return c;
+    } catch (e) { return null; }
+  }
+
+  async function loadIndividual(base) {
+    if (!base) return;
+    const key = baseToKey(base);
+    try { await ensureBench(); }
+    catch (e) { document.getElementById('contourRows').innerHTML = '<p class="empty">' + esc(e.message) + '</p>'; return; }
+    renderContours(base, key);
+    await renderTypes(base, key);
+    refreshFinal(base);
+  }
+
+  // ------------------------------- ② 任务 1：逐算法一行，图可缩放/平移
+  function renderContours(base, key) {
+    const box = document.getElementById('contourRows');
+    const t1 = (BENCH && BENCH.contour_task) || {};
+    box.innerHTML = '';
+    CONTOUR_METHODS.forEach(m => {
+      const res = t1[m.key];
+      const d = res && res.per_drawing ? res.per_drawing[key] : null;
+      const imgPath = 'output/viz/' + base + '_' + m.suffix + '.png';
+      const row = document.createElement('div');
+      row.className = 'rowitem';
+
+      let head = '<div class="rhead"><h5>' + esc(m.label) + '</h5><span class="sub">' + esc(m.note) + '</span>';
+      head += '<a class="raw" href="' + previewUrl(imgPath) + '" target="_blank" rel="noopener">在新标签页看原图 ↗</a>';
+      head += '<div class="metrics">';
+      if (d) {
+        head += '<span class="mline"><span>空间数 / GT</span><b>' + d.n_sys + ' / ' + d.n_gt + '</b></span>'
+          + '<span class="mline"><span>数量比</span><b>' + fix(d.count_ratio) + '</b></span>'
+          + '<span class="mline"><span>覆盖率</span><b>' + pct(d.coverage) + '</b></span>'
+          + '<span class="mline"><span>一对一率</span><b>' + pct(d.one_to_one) + '</b></span>'
+          + '<span class="mline"><span>mIoU</span><b>' + fix(d.miou_matched) + '</b></span>'
+          + '<span class="mline"><span>面积 MAE</span><b>' + fix(d.area_mae_m2, 2) + ' m²</b></span>';
+      } else {
+        head += '<span class="hint">本图未纳入基准集（无 GT 或已被排除）</span>';
+      }
+      head += '</div></div>';
+
+      row.innerHTML = head
+        + '<div class="rbody"><div>'
+        + '<img class="bimg zoomable" alt="' + esc(m.label) + '" src="' + previewUrl(imgPath) + '"'
+        + ' onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'block\'">'
+        + '<div class="nofix" style="display:none">本图没有该算法的轮廓产物 —— 点上方「运行全部算法」生成</div>'
+        + '</div></div>'
+        + '<div class="zoom-hint">滚轮缩放 · 拖拽平移 · 双击复位</div>';
+      box.appendChild(row);
+      const img = row.querySelector('img.zoomable');
+      if (img && window.enableImageZoom) window.enableImageZoom(img);
+    });
+  }
+
+  // ------------------------------- ③ 任务 2：逐方法一行 + 该方法的图谱
+  async function renderTypes(base, key) {
+    const box = document.getElementById('typeRows');
+    const t2 = (BENCH && BENCH.type_task) || {};
+    const folding = ((BENCH && BENCH.label_space) || {}).folding || {};
+    const gtPath = ((BENCH && BENCH.gt_paths) || {})[key];
+    const gtCounts = await countTypes(gtPath, folding);
+    const methodCounts = {};
+    await Promise.all(TYPE_METHODS.map(async m => {
+      methodCounts[m.key] = await countTypes('output/bench/type_' + m.key + '/' + base + '.jsonld', folding);
+    }));
+    const allKeys = {};
+    [gtCounts || {}].concat(Object.values(methodCounts).filter(Boolean)).forEach(c => {
+      Object.keys(c).forEach(k => { allKeys[k] = 1; });
+    });
+    const keys = Object.keys(allKeys).sort();
+
+    box.innerHTML = '';
+    TYPE_METHODS.forEach(m => {
+      const res = t2[m.key];
+      const d = res && res.per_drawing ? res.per_drawing[key] : null;
+      const counts = methodCounts[m.key];
+      const row = document.createElement('div');
+      row.className = 'rowitem';
+
+      let head = '<div class="rhead"><h5>' + esc(m.label) + '</h5><span class="sub">' + esc(m.note) + '</span>'
+        + '<div class="metrics">';
+      if (d) {
+        head += '<span class="mline"><span>GT 空间</span><b>' + d.n_gt + '</b></span>'
+          + '<span class="mline"><span>准确率</span><b>' + pct(d.accuracy) + '</b></span>'
+          + '<span class="mline"><span>覆盖率</span><b>' + pct(d.coverage) + '</b></span>'
+          + '<span class="mline"><span>MacroF1</span><b>' + fix(d.macro_f1) + '</b></span>';
+      } else {
+        head += '<span class="hint">本图未纳入基准集</span>';
+      }
+      head += '</div></div>';
+
+      let table = '';
+      if (counts && keys.length) {
+        table = '<table class="minicount"><thead><tr><th>类型分布</th><th>本方法</th><th>GT</th></tr></thead><tbody>';
+        keys.forEach(k => {
+          const a = counts[k] || 0, b = gtCounts ? (gtCounts[k] || 0) : 0;
+          table += '<tr><td>' + esc(k) + '</td><td>' + a + '</td><td>' + b + '</td></tr>';
+        });
+        table += '</tbody></table>';
+      }
+
+      row.innerHTML = head
+        + '<div class="rbody split"><div>' + table + '</div>'
+        + '<div><div class="kg-inline">'
+        + '<div class="ph">🕸️ 该方法输出的知识图谱<span class="st" id="kgst_' + esc(m.tag) + '">—</span></div>'
+        + '<iframe id="kgf_' + esc(m.tag) + '" src="about:blank"></iframe></div>'
+        + '<div class="zoom-hint">图谱工具栏可切换 全图 / 富化过程 / 套型从属，点节点看 id 与分组。</div>'
+        + '</div></div>';
+      box.appendChild(row);
+
+      setKgFrame('kgf_' + m.tag, 'kgst_' + m.tag, null,
+        { base: base, src: 'system', dir: 'output/bench/type_' + m.key, tag: m.tag });
+    });
+  }
+
+  // --------------------------------------------------------- ① 综合比较表
+  function bestFlags(vals, dir) {
+    const ok = vals.filter(v => typeof v === 'number' && isFinite(v));
+    if (!ok.length) return [];
+    const b = dir === 'min' ? Math.min.apply(null, ok) : Math.max.apply(null, ok);
+    return vals.map(v => typeof v === 'number' && v === b);
+  }
+
+  function renderAggregates() {
+    if (!BENCH) return;
+    // ---- 任务 1 ----
+    const t1 = BENCH.contour_task || {};
+    const keys1 = CONTOUR_METHODS.filter(m => t1[m.key]);
+    const cols1 = [
+      ['系统数', m => t1[m.key].aggregate.n_sys, null],
+      ['GT 数', m => t1[m.key].aggregate.n_gt, null],
+      ['数量比', m => t1[m.key].aggregate.count_ratio, null],
+      ['覆盖率', m => t1[m.key].aggregate.coverage, 'max'],
+      ['一对一率', m => t1[m.key].aggregate.one_to_one, 'max'],
+      ['mIoU', m => t1[m.key].aggregate.miou_matched, 'max'],
+      ['面积 MAE (m²)', m => t1[m.key].aggregate.area_mae_m2, 'min'],
+    ];
+    const flags1 = cols1.map(c => bestFlags(keys1.map(m => c[1](m)), c[2]));
+    let h = '<table class="bench-table"><thead><tr><th>轮廓算法</th>'
+      + cols1.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    keys1.forEach((m, i) => {
+      h += '<tr><td>' + esc(m.label) + '</td>' + cols1.map((c, j) => {
+        const v = c[1](m);
+        const f = c[2] && flags1[j][i];
+        const disp = (c[0].indexOf('MAE') >= 0) ? fix(v, 2)
+                   : (typeof v === 'number' && v <= 2 ? fix(v) : v);
+        return '<td class="' + (f ? 'best' : (c[2] === null ? 'dim' : '')) + '">' + disp + '</td>';
+      }).join('') + '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('task1Table').innerHTML = h;
+
+    // ---- 任务 2 ----
+    const t2 = BENCH.type_task || {};
+    const keys2 = TYPE_METHODS.filter(m => t2[m.key]);
+    const cols2 = [
+      ['GT 空间', m => t2[m.key].aggregate.n_gt, null],
+      ['准确率', m => t2[m.key].aggregate.accuracy, 'max'],
+      ['覆盖率', m => t2[m.key].aggregate.coverage, 'max'],
+      ['MacroF1', m => t2[m.key].aggregate.macro_f1, 'max'],
+      ['WeightedF1', m => t2[m.key].aggregate.weighted_f1, 'max'],
+    ];
+    const flags2 = cols2.map(c => bestFlags(keys2.map(m => c[1](m)), c[2]));
+    h = '<table class="bench-table"><thead><tr><th>分类器</th>'
+      + cols2.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    keys2.forEach((m, i) => {
+      h += '<tr><td>' + esc(m.label) + '</td>' + cols2.map((c, j) => {
+        const v = c[1](m);
+        const f = c[2] && flags2[j][i];
+        const disp = c[2] === null ? v : pct(v);
+        return '<td class="' + (f ? 'best' : (c[2] === null ? 'dim' : '')) + '">' + disp + '</td>';
+      }).join('') + '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('task2Table').innerHTML = h;
+
+    // ---- 逐类别 F1 ----
+    const classes = ((BENCH.label_space) || {}).classes || [];
+    const anyAgg = keys2.length ? t2[keys2[0].key].aggregate : null;
+    if (!anyAgg) { document.getElementById('perClassTable').innerHTML = ''; return; }
+    const present = anyAgg.present || [];
+    const support = anyAgg.support || [];
+    h = '<table class="bench-table"><thead><tr><th>GT 类别</th><th>样本</th>'
+      + keys2.map(m => '<th>' + esc(m.label) + '</th>').join('') + '</tr></thead><tbody>';
+    classes.forEach((cls, i) => {
+      if (!present[i]) return;
+      const vals = keys2.map(m => t2[m.key].aggregate.f1_by_class[i]);
+      const flags = bestFlags(vals, 'max');
+      h += '<tr><td>' + esc(cls) + '</td><td class="dim">' + support[i] + '</td>'
+        + vals.map((v, j) => '<td class="' + (flags[j] ? 'best' : '') + '">' + fix(v) + '</td>').join('')
+        + '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('perClassTable').innerHTML = h;
+  }
+
+  // ------------------------------------------------------------------ 启动
+  ensureBench().catch(e => log('基准数据加载失败: ' + e.message));
+  loadDxfs().then(() => {
+    const s = document.getElementById('dxfSelect');
+    if (s && s.value) loadIndividual(baseOf(s.value));
+  });
 </script>
 </body>
 </html>

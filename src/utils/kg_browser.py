@@ -538,7 +538,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     'bot:interfaceOf':{color:'#E67E22',dashes:false},'bot:hasSpace':{color:'#8E44AD',dashes:true},
     'bot:hasSubZone':{color:'#8E44AD',dashes:true}
   };
-  let network=null, cur=0;
+  // ⚠️ 每个容器各自持有一个 network 实例。以前是单个 `network` 变量，加载时最后一句
+  // `bar.children[0].click()` 会渲染隐藏页签里的 `net2`，把刚渲染好的 `net` destroy 掉，
+  // 于是「全图 Knowledge Graph」页签打开时是空白的（隐藏容器的 canvas 尺寸为 0）。
+  const networks={}, cur=0;
 
   function mkNodes(i, withDiff){
     const st=STEPS[i], prev=i>0?STEPS[i-1]:null;
@@ -562,7 +565,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   function render(containerId, i, withDiff){
     const st=STEPS[i], r=mkNodes(i,withDiff);
-    if(network)network.destroy();
+    if(networks[containerId]){networks[containerId].destroy();delete networks[containerId];}
     const opts={
       groups:Object.assign(Object.fromEntries(Object.entries(GROUP_COLORS).map(([g,c])=>[g,{color:{background:c,border:'#555'}}])),
         {removed:{color:{background:'#FBE2E2',border:'#C0392B'},shape:'box',font:{color:'#B3261E'}}}),
@@ -570,7 +573,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       nodes:{font:{size:12},shape:'dot',size:14,borderWidth:1},
       edges:{smooth:false},interaction:{hover:true,tooltipDelay:120}
     };
-    network=new vis.Network(document.getElementById(containerId),r.data,opts);
+    const network=new vis.Network(document.getElementById(containerId),r.data,opts);
+    networks[containerId]=network;
     const suff=containerId==='net2'?'2':'';
     fillStats('node-stats'+suff,r.stats.nodes_by_group,GROUP_COLORS);
     fillStats('edge-stats'+suff,r.stats.edges_by_type,Object.fromEntries(Object.entries(EDGE_META).map(([k,v])=>[k,v.color])));

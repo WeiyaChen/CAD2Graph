@@ -3,11 +3,9 @@
 Removes every pipeline output under ``output/`` while keeping the directory
 structure intact:
   * output/jsonld     system JSON-LD (raw + enriched)
-  * output/violations SHACL violation reports
   * output/viz        visualization images / HTML (PNG, *_kg_browser.html, ...)
   * output/gt         Ground Truth JSON-LD
   * output/html       evaluation reports + overall_results.json / individual_results.csv
-                      + compliance_results.json / compliance_individual_results.csv
   * output/processed  intermediate SVGs (svg_modifier)
 
 ``input_data/`` is NEVER touched (raw DXF, annotated GT DXF, converted SVGs and
@@ -34,7 +32,6 @@ except Exception:
 # (settings attribute, fallback path, description)
 GENERATED = [
     ("jsonld_dir", "output/jsonld", "system JSON-LD (raw + enriched)"),
-    ("violations_dir", "output/violations", "SHACL violation reports"),
     ("viz_dir", "output/viz", "visualization images / HTML"),
     ("gt_dir", "output/gt", "Ground Truth JSON-LD"),
     ("html_dir", "output/html", "evaluation reports + JSON/CSV"),

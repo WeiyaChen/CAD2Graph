@@ -1,0 +1,192 @@
+benchmark: false
+bn:
+  eps: 1.0e-05
+  mom: 0.1
+cfg_dest: config.yaml
+custom_metrics:
+- edge_classification
+dataset:
+  augmentation: true
+  cache_load: false
+  cache_save: false
+  category:
+  - 0.249
+  - 1.104
+  - 0.054
+  - 1.221
+  - 1.092
+  - 0.922
+  - 1.223
+  - 0.754
+  - 0.881
+  - 2.151
+  - 9.821
+  - 0.407
+  dir: /home/ybc2021/Datasets/CUBI_3
+  edge_dim: 128
+  edge_encoder: false
+  edge_encoder_bn: true
+  edge_encoder_name: sin_pos_t_edge_2
+  edge_message_ratio: 0.8
+  edge_negative_sampling_ratio: 1.0
+  edge_train_mode: all
+  encoder: true
+  encoder_bn: true
+  encoder_dim: 128
+  encoder_name: db
+  format: PyG
+  label_column: none
+  label_table: none
+  location: local
+  name: CUBICASA_Merge_DUALIMG_1
+  node_encoder: true
+  node_encoder_bn: false
+  node_encoder_name: merge_node_resnet_1
+  remove_feature: false
+  resample_disjoint: false
+  resample_negative: false
+  shuffle_split: true
+  split:
+  - 0.8
+  - 0.1
+  - 0.1
+  split_mode: random
+  task: node
+  task_type: semantic_segmentation
+  to_undirected: false
+  transductive: true
+  transform: none
+  tu_simple: true
+device: cuda:0
+gnn:
+  act: prelu
+  agg: mean
+  att_final_linear: false
+  att_final_linear_bn: false
+  att_heads: 1
+  batchnorm: false
+  clear_feature: true
+  dim_inner: 256
+  dropout: 0.0
+  has_act: false
+  has_final_act: false
+  head: node_edge_head
+  head_cfg:
+    norm: layer
+  imgEncoder: resnet50
+  keep_edge: 0.5
+  l2norm: false
+  layer_cfg:
+    __edge_dropout: 0.1
+    __edge_edge_dim: 256
+    __edge_heads: 4
+    __node_dropout: 0.1
+    __node_fill_value: eye
+    __node_heads: 16
+    edge2node: naive replacement
+    edge_layer_type: GATv2+MLP
+    edgestage: DeepGCN_Dual
+    intermediate_output: false
+    node2edge: naive replacement
+    node_layer_type: GATv3_PanAttn_0
+    nodestage: DeepGCN_Dual
+    prefix_num: 7
+  layer_pre_type: NodeLayer1
+  layer_type: NodeEdgeLayer
+  layers_mp: 6
+  layers_post_mp: 1
+  layers_pre_mp: 1
+  msg_direction: single
+  normalize_adj: false
+  pre_has_act: false
+  pre_has_final_act: false
+  pre_layer_cfg: {}
+  self_msg: concat
+  skip_every: 1
+  stage_type: dual_stack
+gpu_mem: false
+mem:
+  inplace: false
+metric_agg: argmax
+metric_best: auto
+model:
+  aux_loss_fun: cross_entropy
+  aux_weight: 1
+  edge_decoding: dot
+  graph_pooling: add
+  has_aux: true
+  has_multi_stage: false
+  loss_fun: focal_loss
+  loss_regularization: false
+  match_upper: true
+  multi_stage_loss_fun: ''
+  size_average: mean
+  thresh: 0.5
+  type: CUBICASA_DUAL
+num_threads: 6
+num_workers: 0
+optim:
+  base_lr: 0.01
+  lr_decay: 0.1
+  max_epoch: 200
+  momentum: 0.9
+  optimizer: sgd
+  scheduler: cos
+  steps:
+  - 30
+  - 60
+  - 90
+  weight_decay: 0.0005
+out_dir: results/CUBI
+print: both
+round: 4
+run_dir: results
+seed: 0
+share:
+  aux_dim_edge: 2
+  aux_dim_node: 1
+  aux_dim_out: 1
+  dim_edge: 2
+  dim_edge_in: 0
+  dim_edge_out: 0
+  dim_node: 4
+  dim_node_in: 1
+  dim_node_out: 0
+  dim_out: 0
+  dim_pos: 128
+  imgEncoder_dim_out: 2048
+  num_splits: 1
+tensorboard_agg: true
+tensorboard_each_run: false
+train:
+  auto_resume: false
+  batch_size: 8
+  ckpt_clean: false
+  ckpt_period: 50
+  ckpt_prefix: ''
+  enable_ckpt: true
+  epoch_resume: -1
+  eval_period: 2
+  exist_root_dir: true
+  iter_per_epoch: 32
+  mode: standard
+  neighbor_sizes:
+  - 20
+  - 15
+  - 10
+  - 5
+  node_per_graph: 32
+  radius: extend
+  retrain: false
+  sample_node: false
+  sampler: full_batch
+  skip_train_eval: false
+  walk_length: 4
+val:
+  batch_size: 1
+  extra_infos: false
+  node_per_graph: 32
+  radius: extend
+  sample_node: false
+  sampler: full_batch
+view_emb: false

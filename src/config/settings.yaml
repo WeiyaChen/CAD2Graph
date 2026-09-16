@@ -22,21 +22,17 @@ runtime:
 
 # === LLM 配置 ===
 llm:
-  api_key: ""  # 请使用环境变量 CAD_RULE_CHECKER_LLM_API_KEY 设置
+  api_key: ""  # 请使用环境变量 CAD2GRAPH_LLM_API_KEY 设置
   base_url: "https://open.bigmodel.cn/api/paas/v4/"
   model: "glm-4-flash"
 
 # === 输出路径（统一管理所有产出物） ===
 output:
   jsonld: "output/jsonld"           # 系统生成的 JSON-LD 知识图谱
-  violations: "output/violations"   # SHACL 违规报告
   viz: "output/viz"                 # 所有可视化图片（CDT/SVG实例/实验/GT）
   gt: "output/gt"                   # Ground Truth 人工标注
   html: "output/html"               # HTML 评估报告
   processed: "output/processed"     # 中间处理 SVG（经 svg_modifier 修改后）
-
-# === SHACL 规则目录 ===
-rules: "rules"
 
 # === 单文件评估配置 ===
 evaluation:
@@ -44,7 +40,6 @@ evaluation:
   sys_jsonld: "output/jsonld/sample.jsonld"                    # 系统输出 JSON-LD 文件路径
   gt_svg: ""                        # Ground Truth SVG 文件路径（可选）
   sys_svg: "sample_modified.svg"                       # 系统输入 SVG 文件路径（可选）
-  violations_json: ""               # 违规报告 JSON 文件路径（可选）
 
 # === Prompt 配置 ===
 prompt:
@@ -53,19 +48,20 @@ prompt:
 # === 空间语义算法（空间轮廓提取 + 空间类型识别） ===
 # 两项任务均为可插拔算法，算法名由 registry 注册名决定；
 # 这里未显式列出的参数会回退到 src/spatial/config.py 中的默认值。
-# 也可用环境变量临时覆盖：CAD_RULE_CHECKER_CONTOUR_ALGO / CAD_RULE_CHECKER_CLASSIFIER_ALGO
+# 也可用环境变量临时覆盖：CAD2GRAPH_CONTOUR_ALGO / CAD2GRAPH_CLASSIFIER_ALGO
+# （旧前缀 CAD_RULE_CHECKER_* 仍然兼容，见 src/config/config.py 的 _read_env）
 spatial:
   contour:
-    algorithm: "CDT"                # 可选：CDT、RGP（别名：RULE_BASED / POLYGONIZE）
+    algorithm: "CDT"                # 可选：CDT、RGP（别名：RULE_BASED / POLYGONIZE）、VecFloorSeg（别名：VFS）
     params:                         # 所有轮廓算法共用的参数
       min_area_mm2: 2000000.0       # 防线1：绝对面积下限（mm²）
       erode_mm: 250.0               # 防线2：形态学负缓冲半径（mm）
       min_width_mm: 600.0           # 防线3：最小旋转外接矩形短边（mm）
       min_compactness: 0.08         # 防线4：紧凑度下限
       min_solidity: 0.25            # 防线4：实心率下限
-      virtual_blocker_dist_tol_mm: 300.0    # 门窗虚拟封口边：端点距离容差（mm）
-      virtual_blocker_max_len_mm: 3500.0    # 门窗虚拟封口边：最大长度（mm）
-      virtual_blocker_angle_tol_deg: 0.0    # 门窗虚拟封口边：平行度容差（度）
+      virtual_blocker_dist_tol_mm: 300.0    # 门窗虚拟封口边：端点距离容差（mm，仅 CDT 使用）
+      virtual_blocker_max_len_mm: 3500.0    # 门窗虚拟封口边：最大长度（mm，仅 CDT 使用）
+      virtual_blocker_angle_tol_deg: 0.0    # 门窗虚拟封口边：平行度容差（度，仅 CDT 使用）
     algorithm_params:               # 按算法名分组的专属参数，只在该算法被选中时生效
       RGP:                          # 规则化几何多边形化（不依赖 CDT 网格）
         coord_precision_mm: 1.0     # 步骤1：坐标取整精度（mm）
@@ -76,13 +72,47 @@ spatial:
         max_gap_mm: 3000.0          # 步骤5：短缺口补齐的最大长度（mm）
         gap_angle_tol_deg: 10.0     # 步骤5：补齐方向与墙线平行度容差（度）
 
+      # VecFloorSeg：矢量线框图 + 栅格图的双流图神经网络（第三个 baseline）。
+      # 推理需要独立的 conda 环境（PyTorch 1.13 + cu117）与训练好的 .ckpt，
+      # 通过子进程调用，CAD2Graph 自身的环境不需要安装 PyTorch。
+      # 见 docs/vecfloorseg_adapter_design.md。
+      VecFloorSeg:
+        # ---- 机器相关：推荐写在 .env 里，不要把绝对路径提交进仓库 ----
+        # python_exe: ""               # 该环境的 python.exe；留空 -> 环境变量 VECFLOORSEG_PYTHON
+        # checkpoint: ""               # 训练产出的 best1.ckpt；留空 -> 环境变量 VECFLOORSEG_CKPT
+        # vf_root: ""                  # VecFloorSeg 仓库根目录；留空 -> 环境变量 VECFLOORSEG_ROOT
+        #                              #   -> 再回退到 <仓库>/third_party/VecFloorSeg
+        # ---- 与机器无关的默认值 ----
+        device: "cuda:0"             # cuda:0 / cpu
+        canvas_px: 512                # 渲染画布边长（模型侧期望 512）
+        margin_ratio: 0.08            # 画布四周留白比例（相对图纸长边）
+        wall_thickness_mm: 0.0        # 墙中线膨胀厚度；0 = 用中线直接三角化
+        simplify_tol_mm: 0.0          # 输出轮廓 Douglas-Peucker 简化容差；0 = 不简化
+        timeout_s: 1800               # 单张图纸推理子进程超时（秒）
+        # work_root: ""               # 临时工作目录父目录；留空 -> 系统临时目录
+        # keep_workdir: false         # true = 保留临时目录（调试用，会打印路径）
+        # keep_labels: [3, 4, 5]      # 调试用：只保留这些类别；留空 -> 只保留房间类别
+        #                              #   0背景 1室外 2墙 3厨房 4餐厅 5卧室 6卫浴 7玄关
+        #                              #   8栏杆 9储物 10车库 11走廊
+        #                              # 提示：旧权重只预测 0/2 时可用 [0, 2] 看到模型原始输出
+
   classification:
-    algorithm: "LLMMultiStage"      # 可选：LLMMultiStage、TextMatching
+    algorithm: "LLMMultiStage"      # 可选：LLMMultiStage、TextMatching、SAGEE（别名：SAGE / SAGE_E）
     params:
       match_tolerance_mm: 0.0       # 文字锚点允许的落位容差（mm），0 = 严格包含
       min_confidence: 0.5           # 低于该置信度的预测会被丢弃
       # text_normalizer: "Dictionary"        # 可选：覆盖算法自身的文本归一化实现
       # text_normalizer_params: {}           # 传给文本归一化算法的参数
-    # algorithm_params:               # 同上：按算法名分组的分类专属参数
-    #   TextMatching:
-    #     match_tolerance_mm: 50.0
+    algorithm_params:               # 同上：按算法名分组的分类专属参数
+      # SAGEE：图神经网络分类器（纯几何 + 拓扑，不读图纸文字）。
+      # 需要一套与权重同名的产物：<weights>.npz / .norm.json / .labels.json。
+      # 推荐用环境变量，不要把绝对路径提交进仓库：SAGEE_WEIGHTS / SAGEE_NORM / SAGEE_LABELS。
+      SAGEE:
+        # weights: ""              # .npz 权重；留空 -> 环境变量 SAGEE_WEIGHTS
+        # norm: ""                 # 标准化参数；留空 -> 同名的 <weights>.norm.json
+        # labels: ""               # 类别表；留空 -> 同名的 <weights>.labels.json
+        min_confidence: 0.0         # ⚠️ 实测不要抬高：0.5 会让准确率 0.378->0.321、
+                                    # 覆盖率 0.680->0.461、macro-F1 也降（见 docs §6.6）。
+                                    # SAGE-E 的 softmax 分布偏平，阈值只会砍掉正确答案。
+      # TextMatching:
+      #   match_tolerance_mm: 50.0

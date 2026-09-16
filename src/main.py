@@ -11,7 +11,7 @@ from src.processor import process_single_drawing, process_directory
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="CAD Rule Checker - Main Entry")
+    parser = argparse.ArgumentParser(description="CAD2Graph - Main Entry")
     parser.add_argument("--config", default="src/config/settings.yaml", help="Path to config file")
     parser.add_argument("--mode", choices=["SINGLE", "BATCH"], default=None, help="Run mode: SINGLE or BATCH")
     parser.add_argument("--target-dir", default=None, help="Input SVG directory name")
@@ -68,7 +68,7 @@ def main():
         if not target_file.exists():
             print(f"ERROR: Target file not found '{target_file}'")
             sys.exit(1)
-        print(f"Starting single-drawing review: {target_file}")
+        print(f"Starting single-drawing parsing: {target_file}")
         process_single_drawing(
             str(target_file), output_json_dir, llm_client,
             contour_algorithm=args.contour_algo,
@@ -79,7 +79,7 @@ def main():
         if not target_dir.exists() or not target_dir.is_dir():
             print(f"ERROR: Invalid or missing target directory '{target_dir}'")
             sys.exit(1)
-        print(f"Starting batch review for directory: {target_dir}")
+        print(f"Starting batch parsing for directory: {target_dir}")
         process_directory(
             str(target_dir), output_json_dir, llm_client,
             contour_algorithm=args.contour_algo,

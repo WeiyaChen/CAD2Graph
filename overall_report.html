@@ -3,124 +3,333 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evaluation Overview · overall_results Visualization</title>
+<title>Evaluation Overview · 端到端对比</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; background: #f4f7fb; color: #223; }
-  header { background: linear-gradient(135deg, #3a5a1c, #6f9e2e); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
+  header { background: linear-gradient(135deg, #3a5a1c, #6f9e2e); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   header a.back { color: #e2f2c9; text-decoration: none; font-size: 14px; }
   header h1 { font-size: 20px; }
-  .wrap { padding: 20px; max-width: 1200px; margin: 0 auto; }
+  header .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; background: rgba(255,255,255,.2); color: #fff; }
+  .wrap { padding: 20px; max-width: 1240px; margin: 0 auto; }
   .src { font-size: 12px; color: #7a8aa0; margin-bottom: 16px; }
-  .section-title { font-size: 16px; margin: 26px 0 12px; color: #3a5a1c; border-left: 4px solid #6f9e2e; padding-left: 10px; }
-  .section-title.compliance { color: #a34a2e; border-left-color: #a34a2e; }
-  .groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .group { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-  .group h3 { font-size: 15px; margin-bottom: 10px; color: #3a5a1c; }
-  .compliance-groups .group { border: 1px solid #f0d5cb; }
-  .compliance-groups .group h3 { color: #a34a2e; }
-  .metric { margin-bottom: 12px; }
-  .metric .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-  .metric .row .v { font-weight: 700; }
-  .bar { height: 8px; background: #eef1f5; border-radius: 99px; overflow: hidden; }
-  .bar > div { height: 100%; background: linear-gradient(90deg, #6f9e2e, #3a5a1c); border-radius: 99px; }
-  .compliance-groups .bar > div { background: linear-gradient(90deg, #c96b4a, #a34a2e); }
-  .total { background: #fff; border-radius: 12px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-top: 16px; font-size: 15px; }
-  .total b { color: #3a5a1c; }
-  .table-wrap { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-top: 16px; overflow: auto; }
-  .table-wrap h3 { font-size: 15px; margin-bottom: 10px; color: #3a5a1c; }
-  .table-wrap h3.compliance { color: #a34a2e; }
-  table { border-collapse: collapse; width: 100%; font-size: 12px; }
-  th, td { border: 1px solid #e4e9f0; padding: 6px 8px; text-align: left; white-space: nowrap; }
-  th { background: #f2f6ea; }
-  .table-wrap.compliance-table th { background: #fbeee8; }
+  .section-title { font-size: 16px; margin: 30px 0 6px; color: #3a5a1c; border-left: 4px solid #6f9e2e; padding-left: 10px; }
+  .section-title:first-of-type { margin-top: 0; }
+  .hint { font-size: 12.5px; color: #6b7a8d; line-height: 1.7; margin: 6px 0 12px; }
+  .hint code { background: #eef2f7; border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+  .card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
   .empty { color: #7a8aa0; padding: 20px; text-align: center; }
+
+  /* ---- 端到端矩阵 ---- */
+  .matrix { display: grid; gap: 8px; margin-top: 4px; }
+  .matrix .hcell, .matrix .vcell { display: flex; align-items: center; font-size: 14px; font-weight: 700; color: #3a5a1c; }
+  .matrix .hcell { justify-content: center; padding-bottom: 6px; }
+  .matrix .vcell { justify-content: flex-end; padding-right: 10px; }
+  .cell { border-radius: 10px; padding: 14px 12px; text-align: center; color: #14331a; position: relative; }
+  .cell .big { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .cell .sub { font-size: 11.5px; margin-top: 6px; opacity: .82; font-variant-numeric: tabular-nums; line-height: 1.5; }
+  .cell.best { outline: 3px solid #146c3d; outline-offset: -3px; }
+  .cell.best::after { content: '最优'; position: absolute; top: 5px; right: 7px; font-size: 10px; font-weight: 700;
+                      background: #146c3d; color: #fff; border-radius: 999px; padding: 1px 7px; }
+  .cell.missing { background: #f4f6f9 !important; color: #a0aab6; }
+  .cell.missing .big { font-size: 15px; font-weight: 600; }
+  .cell.partial { outline: 2px dashed #d08b00; outline-offset: -2px; }
+  .tbl tr.partial td { background: #fdf6e3; }
+
+  /* ---- 表 ---- */
+  .tbl { border-collapse: collapse; width: 100%; font-size: 12.5px; margin-top: 4px; }
+  .tbl th, .tbl td { border: 1px solid #e4e9f0; padding: 6px 9px; text-align: right; font-variant-numeric: tabular-nums; }
+  .tbl th:first-child, .tbl td:first-child { text-align: left; font-variant-numeric: normal; }
+  .tbl th { background: #f2f6ea; color: #3a5a1c; white-space: nowrap; }
+  .tbl td.best { background: #eaf7ee; font-weight: 700; color: #146c3d; }
+  .tbl td.dim { color: #a0aab6; }
+  .tbl td.na { color: #c2cad4; }
+  select { padding: 6px 9px; border: 1px solid #cfd8e3; border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; }
+  .note { background: #fdf6e3; border: 1px solid #eedd9a; color: #6b5d13; border-radius: 8px; padding: 10px 14px; font-size: 12.5px; line-height: 1.7; margin-top: 12px; }
 </style>
 </head>
 <body>
 <header>
   <a class="back" href="index.html">← Back</a>
-  <h1>Evaluation Overview · overall_results Visualization</h1>
+  <h1>Evaluation Overview · 端到端对比</h1>
+  <span class="badge">任务 1 的轮廓 × 任务 2 的分类器 · 3 × 3 排列组合</span>
 </header>
 <div class="wrap">
-  <div class="src" id="srcInfo">Source: output/html/overall_results.json (read-only, no batch evaluation)</div>
+  <div class="src" id="srcInfo">数据源：output/bench/scores.json（只读，不会触发任何批处理）</div>
 
-  <h2 class="section-title">Core Experiments · Geometry / Topology / Geometric Computation / Semantic</h2>
-  <div class="groups" id="groups"></div>
-  <div class="total" id="totalInfo"></div>
-  <div class="table-wrap">
-    <h3>Per-Sample Details (individual_results.csv)</h3>
-    <div id="tableBox" class="empty">Loading…</div>
+  <div class="note" style="margin-top:0">
+    <b>这个页面和 <code>exp_analysis.html</code> 的区别：</b>
+    本页是<strong>端到端</strong> —— <strong>任务 2 跑在任务 1 的输出上</strong>，所以每一格测的是"整套流水线"的效果，
+    轮廓误差与分类误差会叠加。<code>exp_analysis.html</code> 则是<strong>算法级</strong>的局部对比：
+    任务 1 单独评轮廓，任务 2 统一跑在 GT 轮廓上（那相当于端到端的上界）。
   </div>
 
-  <h2 class="section-title compliance">SHACL Compliance (Exp 5) · Separate Results</h2>
-  <div class="groups compliance-groups" id="complianceGroups"></div>
-  <div class="table-wrap compliance-table">
-    <h3 class="compliance">Per-Sample Compliance Details (compliance_individual_results.csv)</h3>
-    <div id="complianceTableBox" class="empty">Loading…</div>
+  <h2 class="section-title">① 端到端准确率矩阵</h2>
+  <div class="hint">
+    每一格 = <b>用该行的轮廓算法提取空间 → 用该列的分类器判类型 → 与 GT 逐空间对照</b> 的准确率。
+    颜色越深越好。鼠标悬停可看分解。
   </div>
+  <div class="card"><div class="matrix" id="matrix"></div></div>
+
+  <h2 class="section-title">② 误差分解：损失出在"提取"还是"分类"</h2>
+  <div class="hint">
+    <code>端到端准确率 = 轮廓覆盖 × 条件准确率</code>。<br>
+    <b>轮廓覆盖</b>：任务 1 有没有把这个 GT 空间找出来（找不出来就直接判错，与分类器无关）。<br>
+    <b>条件准确率</b>：找出来之后，类型判对的比例。这两个数一分开，就知道该优化哪一环。
+  </div>
+  <div class="card"><div id="breakTable" class="empty">Loading…</div></div>
+
+  <h2 class="section-title">③ 参照：任务 1 单独（轮廓质量，与分类器无关）</h2>
+  <div class="hint">数值取自富化<strong>之前</strong>写出的 <code>_raw.jsonld</code> —— 那才是"提取出来的轮廓"本身。</div>
+  <div class="card"><div id="t1Table" class="empty">Loading…</div></div>
+
+  <h2 class="section-title">④ 参照：任务 2 单独（分类能力，统一跑在 GT 轮廓上）</h2>
+  <div class="hint">起点是完美的轮廓，所以这一组是端到端能拿到的<b>上界</b>。把 ① 和它对照，差值就是轮廓误差的代价。</div>
+  <div class="card"><div id="t2Table" class="empty">Loading…</div></div>
+
+  <h2 class="section-title">⑤ 逐 GT 类别 F1</h2>
+  <div class="hint">
+    选一个组合，看它在每个类别上的表现。
+    <label style="margin-left:8px">组合：<select id="comboSel"></select></label>
+  </div>
+  <div class="card"><div id="perClass" class="empty">Loading…</div></div>
 </div>
 
 <script>
-  // Core experiments (geometry / topology / geometric computation / semantic) — grouped together
-  const CORE_GROUPS = [
-    { key: 'Geometry', title: 'Geometry Extraction', metrics: [['Global_1to1_Match_Rate', '1-to-1 Match Rate', 1, 'pct'], ['Global_mIoU', 'mIoU', 1, 'pct']] },
-    { key: 'Topology', title: 'Topology', metrics: [['Global_Precision', 'Precision', 1, 'pct'], ['Global_Recall', 'Recall', 1, 'pct'], ['Global_F1', 'F1', 1, 'pct']] },
-    { key: 'Geometric_Computation', title: 'Geometric Computation Error', metrics: [['Global_MAE_Area', 'MAE Area (㎡)', 50, 'num'], ['Global_MAE_Width', 'MAE Short Side (m)', 5, 'num']] },
-    { key: 'Semantic_Reasoning', title: 'Semantic Reasoning', metrics: [['Global_Accuracy', 'Accuracy', 1, 'pct'], ['Global_Macro_F1', 'Macro F1', 1, 'pct']] },
-  ];
+  // =========================================================================
+  // 端到端页：数据全部来自 output/bench/scores.json
+  //   e2e_task   —— 3×3 排列组合（任务 2 跑在任务 1 的轮廓上）
+  //   contour_task —— 任务 1 单独（NoOp 分类器，读 _raw.jsonld）
+  //   type_task  —— 任务 2 单独（GT 轮廓）
+  // =========================================================================
+  const CONTOUR_ORDER = ['CDT', 'RGP', 'VecFloorSeg'];
+  const CLF_ORDER = ['LLMMultiStage', 'SAGEE', 'TextMatching'];
+  const previewUrl = p => '/api/preview?path=' + encodeURIComponent(p);
+  const pct = v => (v === undefined || v === null) ? '—' : (v * 100).toFixed(1) + '%';
+  const fix = (v, n) => (v === undefined || v === null) ? '—' : Number(v).toFixed(n === undefined ? 3 : n);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  // SHACL compliance (Exp 5) — displayed as its own separate column
-  const COMPLIANCE_GROUPS = [
-    { key: 'Compliance_Checking', title: 'SHACL Compliance', metrics: [['Global_Precision', 'Precision', 1, 'pct'], ['Global_Recall', 'Recall', 1, 'pct'], ['Global_F1', 'F1', 1, 'pct']] },
-  ];
+  /** 按 (contour, clf) 建索引，方便按矩阵取格 */
+  function indexE2E(e2e) {
+    const map = {};
+    Object.values(e2e || {}).forEach(v => { map[v.contour + '|' + v.clf] = v; });
+    return map;
+  }
 
-  function renderGroups(boxId, groups, raw) {
-    const box = document.getElementById(boxId);
+  /** 跑满的图纸数 —— 不满这个数的 run 是**未跑完**，它的百分比不可与其它格直接比。
+   *  （哪怕只差几张图，分母都不一样了。） */
+  function maxDrawings(e2e) {
+    return Math.max.apply(null, Object.values(e2e || {}).map(v => v.n_drawings || 0).concat([0]));
+  }
+
+  function renderMatrix(e2e) {
+    const box = document.getElementById('matrix');
     box.innerHTML = '';
-    groups.forEach(g => {
-      const group = raw[g.key] || {};
-      const card = document.createElement('div'); card.className = 'group';
-      let inner = '<h3>' + g.title + '</h3>';
-      g.metrics.forEach(([key, label, scale, fmt]) => {
-        let val = group[key];
-        if (val === undefined || val === null) val = 0;
-        const pct = fmt === 'num' ? Math.min(val / scale, 1) : val;
-        const display = fmt === 'num' ? Number(val).toFixed(3) : (val * 100).toFixed(1) + '%';
-        inner += '<div class="metric"><div class="row"><span>' + label + '</span><span class="v">' + display + '</span></div><div class="bar"><div style="width:' + (pct * 100).toFixed(1) + '%"></div></div></div>';
+    const idx = indexE2E(e2e);
+    const vals = Object.values(e2e || {}).map(v => v.breakdown.accuracy);
+    const hi = vals.length ? Math.max.apply(null, vals) : 0;
+    // 只有一格时标「最优」没有意义（容易在只跑了一部分时误导）
+    const showBest = vals.length >= 2;
+    const full = maxDrawings(e2e);
+
+    box.style.gridTemplateColumns = '104px repeat(' + CLF_ORDER.length + ', minmax(0,1fr))';
+    box.appendChild(cellDiv('hcell', ''));
+    CLF_ORDER.forEach(c => box.appendChild(cellDiv('hcell', c)));
+
+    CONTOUR_ORDER.forEach(ct => {
+      box.appendChild(cellDiv('vcell', ct));
+      CLF_ORDER.forEach(clf => {
+        const v = idx[ct + '|' + clf];
+        const d = document.createElement('div');
+        if (!v) { d.className = 'cell missing'; d.innerHTML = '<div class="big">未跑</div>'; box.appendChild(d); return; }
+        const b = v.breakdown;
+        const partial = (v.n_drawings || 0) < full;
+        const isBest = showBest && !partial && Math.abs(b.accuracy - hi) < 1e-9;
+        d.className = 'cell' + (isBest ? ' best' : '') + (partial ? ' partial' : '');
+        // 颜色深浅按准确率映射（0.2 → 很浅，0.8 → 很深）
+        const t = Math.max(0, Math.min(1, (b.accuracy - 0.2) / 0.6));
+        d.style.background = 'rgba(111,158,46,' + (0.10 + 0.62 * t).toFixed(3) + ')';
+        d.title = ct + ' + ' + clf + '\n轮廓覆盖 ' + pct(b.contour_coverage)
+                + ' × 条件准确率 ' + pct(b.accuracy_given_covered)
+                + '\n= 端到端 ' + pct(b.accuracy)
+                + '\nMacroF1 ' + fix(v.aggregate.macro_f1)
+                + '\n跑完 ' + (v.n_drawings || 0) + '/' + full + ' 张图纸';
+        d.innerHTML = '<div class="big">' + pct(b.accuracy) + '</div>'
+          + '<div class="sub">轮廓覆盖 ' + pct(b.contour_coverage) + '<br>× 条件准确 ' + pct(b.accuracy_given_covered) + '</div>'
+          + (partial ? '<div class="sub" style="color:#b06a00;font-weight:700">⚠ 只跑了 ' + v.n_drawings + '/' + full + ' 张</div>' : '');
+        box.appendChild(d);
       });
-      card.innerHTML = inner;
-      box.appendChild(card);
     });
   }
 
-  function renderTable(boxId, rows) {
-    const box = document.getElementById(boxId);
-    if (!rows || !rows.length) { box.innerHTML = '<div class="empty">No per-sample data (run: python -m src.experiment.dataset_evaluator)</div>'; return; }
-    const cols = Object.keys(rows[0]);
-    let html = '<table><thead><tr>' + cols.map(c => '<th>' + c + '</th>').join('') + '</tr></thead><tbody>';
-    rows.forEach(r => { html += '<tr>' + cols.map(c => '<td>' + (r[c] ?? '') + '</td>').join('') + '</tr>'; });
-    html += '</tbody></table>';
-    box.innerHTML = html;
+  function cellDiv(cls, text) { const d = document.createElement('div'); d.className = cls; d.textContent = text; return d; }
+
+  function bestFlags(vals, dir) {
+    const ok = vals.filter(v => typeof v === 'number' && isFinite(v));
+    if (!ok.length) return vals.map(() => false);
+    const b = dir === 'min' ? Math.min.apply(null, ok) : Math.max.apply(null, ok);
+    return vals.map(v => typeof v === 'number' && v === b);
   }
 
-  fetch('/api/evaluation-data').then(r => r.json()).then(d => {
-    const raw = d.raw || d.overall || {};
-    const o = d.overall || {};
-    document.getElementById('srcInfo').textContent = 'Source: ' + (o.source || 'output/html/overall_results.json') + ' (read-only, no batch evaluation)';
-    // Core experiments (geometry / topology / semantic) together
-    renderGroups('groups', CORE_GROUPS, raw);
-    document.getElementById('totalInfo').innerHTML = 'Samples evaluated: <b>' + (raw.Total_Files_Processed ?? 0) + '</b>';
-    renderTable('tableBox', d.individual);
+  function renderBreakdown(e2e) {
+    const idx = indexE2E(e2e);
+    const rows = [];
+    CONTOUR_ORDER.forEach(ct => CLF_ORDER.forEach(clf => {
+      const v = idx[ct + '|' + clf];
+      if (v) rows.push(v);
+    }));
+    if (!rows.length) { document.getElementById('breakTable').innerHTML = '<div class="empty">还没有端到端产物</div>'; return; }
+    const f = {
+      contour_coverage: bestFlags(rows.map(r => r.breakdown.contour_coverage), 'max'),
+      accuracy_given_covered: bestFlags(rows.map(r => r.breakdown.accuracy_given_covered), 'max'),
+      accuracy: bestFlags(rows.map(r => r.breakdown.accuracy), 'max'),
+      macro_f1: bestFlags(rows.map(r => r.aggregate.macro_f1), 'max'),
+      weighted_f1: bestFlags(rows.map(r => r.aggregate.weighted_f1), 'max'),
+    };
+    let h = '<table class="tbl"><thead><tr><th>轮廓算法</th><th>分类器</th><th>图纸</th><th>GT 空间</th>'
+      + '<th>轮廓覆盖</th><th>条件准确率</th><th>端到端准确率</th>'
+      + '<th>MacroF1</th><th>WeightedF1</th></tr></thead><tbody>';
+    const full = maxDrawings(e2e);
+    rows.forEach((r, i) => {
+      const partial = (r.n_drawings || 0) < full;
+      h += '<tr' + (partial ? ' class="partial"' : '') + '><td>' + esc(r.contour) + '</td><td>' + esc(r.clf) + '</td>'
+        + '<td class="' + (partial ? '' : 'dim') + '">' + (r.n_drawings || 0) + '/' + full + '</td>'
+        + '<td class="dim">' + r.breakdown.n_gt + '</td>'
+        + '<td class="' + (f.contour_coverage[i] && !partial ? 'best' : '') + '">' + pct(r.breakdown.contour_coverage) + '</td>'
+        + '<td class="' + (f.accuracy_given_covered[i] && !partial ? 'best' : '') + '">' + pct(r.breakdown.accuracy_given_covered) + '</td>'
+        + '<td class="' + (f.accuracy[i] && !partial ? 'best' : '') + '">' + pct(r.breakdown.accuracy) + '</td>'
+        + '<td class="' + (f.macro_f1[i] && !partial ? 'best' : '') + '">' + fix(r.aggregate.macro_f1) + '</td>'
+        + '<td class="' + (f.weighted_f1[i] && !partial ? 'best' : '') + '">' + fix(r.aggregate.weighted_f1) + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    h += '<div class="hint" style="margin-top:10px">黄底 + 「x/39」不满的行 = 那一组还没跑完，分母不一样，<b>它的百分比不能与其它行直接比</b>。</div>';
+    document.getElementById('breakTable').innerHTML = h;
+  }
 
-    // SHACL compliance results in their own separate column
-    const compRaw = d.complianceRaw || d.compliance || {};
-    renderGroups('complianceGroups', COMPLIANCE_GROUPS, compRaw);
-    renderTable('complianceTableBox', d.complianceIndividual);
-  }).catch(e => {
-    document.getElementById('srcInfo').textContent = 'Load failed: ' + e;
-    document.getElementById('totalInfo').textContent = 'Please make sure output/html/overall_results.json exists';
-  });
+  function renderTask1(t1) {
+    const order = CONTOUR_ORDER.filter(c => t1[c]);
+    const extra = Object.keys(t1).filter(k => order.indexOf(k) < 0);   // GT(自检)
+    const all = order.concat(extra);
+    if (!all.length) { document.getElementById('t1Table').innerHTML = '<div class="empty">没有任务 1 产物</div>'; return; }
+    const cols = [
+      ['系统数', m => t1[m].aggregate.n_sys, null, 'int'],
+      ['数量比', m => t1[m].aggregate.count_ratio, null],
+      ['覆盖率', m => t1[m].aggregate.coverage, 'max'],
+      ['一对一率', m => t1[m].aggregate.one_to_one, 'max'],
+      ['mIoU', m => t1[m].aggregate.miou_matched, 'max'],
+      ['面积 MAE (m²)', m => t1[m].aggregate.area_mae_m2, 'min'],
+    ];
+    const flags = cols.map(c => bestFlags(order.map(m => c[1](m)), c[2]));
+    const fmt = (c, v) => c[3] === 'int' ? String(v)
+                       : (c[0].indexOf('MAE') >= 0 ? fix(v, 2) : fix(v, 3));
+    let h = '<table class="tbl"><thead><tr><th>轮廓算法</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    all.forEach(m => {
+      const ref = order.indexOf(m);
+      h += '<tr><td>' + esc(m) + (ref < 0 ? '（参照，不参评）' : '') + '</td>'
+        + cols.map((c, j) => {
+          const cls = ref < 0 ? 'dim' : (c[2] && flags[j][ref] ? 'best' : (c[2] === null ? 'dim' : ''));
+          return '<td class="' + cls + '">' + fmt(c, c[1](m)) + '</td>';
+        }).join('') + '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('t1Table').innerHTML = h;
+  }
+
+  function renderTask2(t2) {
+    const order = CLF_ORDER.filter(c => t2[c]);
+    if (!order.length) { document.getElementById('t2Table').innerHTML = '<div class="empty">没有任务 2 产物</div>'; return; }
+    const cols = [
+      ['GT 空间', m => t2[m].aggregate.n_gt, null],
+      ['准确率', m => t2[m].aggregate.accuracy, 'max'],
+      ['覆盖率', m => t2[m].aggregate.coverage, 'max'],
+      ['MacroF1', m => t2[m].aggregate.macro_f1, 'max'],
+      ['WeightedF1', m => t2[m].aggregate.weighted_f1, 'max'],
+    ];
+    const flags = cols.map(c => bestFlags(order.map(m => c[1](m)), c[2]));
+    let h = '<table class="tbl"><thead><tr><th>分类器</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
+    order.forEach((m, i) => {
+      h += '<tr><td>' + esc(m) + '</td>' + cols.map((c, j) => {
+        const v = c[1](m);
+        const cls = c[2] && flags[j][i] ? 'best' : (c[2] === null ? 'dim' : '');
+        const disp = c[2] === null ? v : pct(v);
+        return '<td class="' + cls + '">' + disp + '</td>';
+      }).join('') + '</tr>';
+    });
+    h += '</tbody></table>';
+    document.getElementById('t2Table').innerHTML = h;
+  }
+
+  // ---- ⑤ 逐类 F1（可切换组合）----
+  let DATA = null;
+
+  function fillComboSelect() {
+    const sel = document.getElementById('comboSel');
+    const idx = indexE2E(DATA.e2e_task);
+    sel.innerHTML = '';
+    CONTOUR_ORDER.forEach(ct => CLF_ORDER.forEach(clf => {
+      const v = idx[ct + '|' + clf];
+      if (!v) return;
+      const o = document.createElement('option');
+      o.value = ct + '|' + clf;
+      o.textContent = ct + ' + ' + clf + '　端到端 ' + pct(v.breakdown.accuracy);
+      sel.appendChild(o);
+    }));
+    // 默认选端到端准确率最高的那个
+    const best = Object.values(DATA.e2e_task || {}).sort((a, b) => b.breakdown.accuracy - a.breakdown.accuracy)[0];
+    if (best) sel.value = best.contour + '|' + best.clf;
+    sel.onchange = renderPerClass;
+  }
+
+  function renderPerClass() {
+    const box = document.getElementById('perClass');
+    const sel = document.getElementById('comboSel');
+    if (!sel.value || !DATA) { box.innerHTML = '<div class="empty">没有可选的组合</div>'; return; }
+    const idx = indexE2E(DATA.e2e_task);
+    const cell = idx[sel.value];
+    const classes = (DATA.label_space || {}).classes || [];
+    const g = cell.aggregate;
+    // 同时在表里给出「任务 2 单独（GT 轮廓）」的同一分类器，作为上界参照
+    const ref = (DATA.type_task || {})[cell.clf];
+    let h = '<table class="tbl"><thead><tr><th>GT 类别</th><th>样本</th>'
+      + '<th>端到端 F1<br><span style="font-weight:400">' + esc(sel.value) + '</span></th>'
+      + (ref ? '<th>任务2 单独 F1<br><span style="font-weight:400">GT 轮廓（上界）</span></th>' : '')
+      + '</tr></thead><tbody>';
+    const present = g.present || [];
+    classes.forEach((cls, i) => {
+      if (!present[i]) return;
+      const a = g.f1_by_class[i];
+      const b = ref ? ref.aggregate.f1_by_class[i] : null;
+      h += '<tr><td>' + esc(cls) + '</td><td class="dim">' + g.support[i] + '</td>'
+        + '<td>' + fix(a) + '</td>'
+        + (ref ? '<td class="' + (b > a + 1e-9 ? 'best' : 'dim') + '">' + fix(b) + '</td>' : '')
+        + '</tr>';
+    });
+    h += '</tbody></table>';
+    h += '<div class="hint" style="margin-top:10px">右列绿色 = 用 GT 轮廓时该类别更好，说明这一类的损失来自<b>轮廓提取</b>而不是分类器。</div>';
+    box.innerHTML = h;
+  }
+
+  fetch(previewUrl('output/bench/scores.json') + '&t=' + Date.now())
+    .then(r => { if (!r.ok) throw new Error('scores.json 不存在，请先跑 scripts/evaluate_benchmark.py'); return r.json(); })
+    .then(d => {
+      DATA = d;
+      document.getElementById('srcInfo').textContent =
+        '数据源：output/bench/scores.json（生成于 ' + (d.generated_at || '?') + '）· 标签空间 '
+        + ((d.label_space || {}).name || '?') + ' ' + (((d.label_space || {}).classes || []).length) + ' 类'
+        + ' · 基准集排除 ' + JSON.stringify(d.excluded_prefixes || []);
+      renderMatrix(d.e2e_task);
+      renderBreakdown(d.e2e_task);
+      renderTask1(d.contour_task || {});
+      renderTask2(d.type_task || {});
+      fillComboSelect();
+      renderPerClass();
+    })
+    .catch(e => {
+      ['matrix', 'breakTable', 't1Table', 't2Table', 'perClass'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<div class="empty">' + esc(e.message) + '</div>';
+      });
+    });
 </script>
 </body>
 </html>

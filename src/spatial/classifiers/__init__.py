@@ -7,9 +7,13 @@
 
 from . import matching, normalizers, prompts  # noqa: F401
 from .llm_multistage import LLMMultiStageClassifier  # noqa: F401
+from .noop import NoOpClassifier  # noqa: F401
+from .sagee import SageeClassifier  # noqa: F401
 from .text_matching import TextMatchingClassifier  # noqa: F401
 
 __all__ = [
     "LLMMultiStageClassifier",
+    "NoOpClassifier",
+    "SageeClassifier",
     "TextMatchingClassifier",
 ]

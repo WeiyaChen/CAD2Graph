@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAD Rule Checker Workbench</title>
+<title>CAD2Graph Workbench</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -38,8 +38,8 @@
 <body>
 <div class="container">
   <img class="logo" src="img/ndc_letters.png" alt="NDC Logo">
-  <h1>CAD Rule Checker Workbench</h1>
-  <p class="subtitle">Drawing parsing and compliance review are decoupled · All pages accept a single file input</p>
+  <h1>CAD2Graph Workbench</h1>
+  <p class="subtitle">Drawing parsing and knowledge graph generation · All pages accept a single file input</p>
 
   <div class="grid">
     <a class="card" href="normal_use.html">
@@ -49,27 +49,21 @@
     </a>
 
     <a class="card" href="exp_analysis.html">
-      <span class="tag purple">Category 2 · 2.1 Drawing Analysis</span>
+      <span class="tag purple">Category 2 · Drawing Analysis</span>
       <h2>System vs GT Comparison</h2>
       <p>Input a single DXF file and view the system result and the Ground Truth result side by side on screen.</p>
-    </a>
-
-    <a class="card" href="exp_shacl.html">
-      <span class="tag purple">Category 2 · 2.2 SHACL Review</span>
-      <h2>SHACL Compliance Review</h2>
-      <p>Input a single DXF file. The system locates the processed file automatically; new files are parsed first, then L1/L2/L3 compliance checks run.</p>
     </a>
 
     <a class="card" href="kg_browser.html">
       <span class="tag orange">Tool · Knowledge Graph</span>
       <h2>Knowledge Graph Browser</h2>
-      <p>Standalone tool: load one knowledge graph at a time (system JSON-LD or GT), with optional enrichment stage replay. For System vs GT comparison, use Drawing Analysis (Exp 2.1).</p>
+      <p>Standalone tool: load one knowledge graph at a time (system JSON-LD or GT), with optional enrichment stage replay. For System vs GT comparison, use Drawing Analysis.</p>
     </a>
 
     <a class="card" href="overall_report.html">
       <span class="tag teal">Evaluation Overview</span>
       <h2>overall_results Visualization</h2>
-      <p>Core experiments (geometry / topology / semantic) grouped together, plus SHACL compliance results displayed in their own separate section.</p>
+      <p>Core experiments (geometry / topology / geometric computation / semantic reasoning) grouped together.</p>
     </a>
 
     <a class="card" href="manual.html">

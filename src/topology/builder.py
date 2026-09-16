@@ -108,12 +108,19 @@ class TopologyBuilder:
 
         # 构建房间轮廓（具体算法由配置决定，默认 CDT）
         extractor = self._create_contour_extractor(contour_algorithm, contour_params)
+        # 把"这是哪张图纸"交给提取器：默认实现用不到，但 GT 提取器必须靠它找到
+        # 对应的标注文件（以前这里根本不传 context，GT 提取器无从下手）。
+        drawing_base = os.path.basename(json_output_path).replace("_raw.jsonld", "")
         room_contours = extractor.extract(
             walls=clean_walls,
             doors=door_patches,
             windows=window_patches,
             texts=text_annotations,
             components=components,
+            context={
+                "base_name": drawing_base,
+                "json_output_path": str(json_output_path),
+            },
         )
         room_results = contours_to_legacy_dicts(room_contours)
 

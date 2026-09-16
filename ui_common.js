@@ -1,5 +1,5 @@
 /* ============================================================
- * ui_common.js — Shared UI helpers for CAD Rule Checker pages
+ * ui_common.js — Shared UI helpers for CAD2Graph pages
  *
  * Provides:
  *   - enableImageZoom(img)  : wheel zoom + drag pan + control bar

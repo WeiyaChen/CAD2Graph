@@ -126,10 +126,16 @@ class SemanticEnricher:
         ]
 
     def _build_components(self) -> list[SpatialComponent]:
-        """把构件节点转换为领域对象，供算法做家具/门窗推理。"""
+        """把构件节点转换为领域对象，供算法做家具/门窗推理。
+
+        ``properties['node']`` 挂上原始图谱节点（与 ``_build_contours`` 的
+        ``attributes['node']`` 对称）。需要图/拓扑信息的分类器靠它拿
+        ``bot:interfaceOf``（门连接哪两个空间）与 ``geo:asWKT``。
+        """
         components = []
         for element_id, label in self.element_cache.items():
-            node_types = self.node_cache.get(element_id, {}).get("@type") or []
+            node = self.node_cache.get(element_id, {})
+            node_types = node.get("@type") or []
             if isinstance(node_types, str):
                 node_types = [node_types]
             category = next(
@@ -141,6 +147,8 @@ class SemanticEnricher:
                     uid=element_id,
                     category=category,
                     specific_type=None if label == UNKNOWN_LABEL else label,
+                    geometry=node.get("geo:asWKT"),
+                    properties={"node": node},
                 )
             )
         return components

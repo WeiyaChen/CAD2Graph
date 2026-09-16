@@ -5,15 +5,13 @@ from shapely.wkt import loads as wkt_loads
 from shapely.geometry import Polygon
 from shapely.ops import unary_union
 from sklearn.metrics import classification_report, accuracy_score, precision_recall_fscore_support
-import re
 
 
 class PipelineEvaluator:
-    def __init__(self, ground_truth_data, system_output_data, system_violations,
+    def __init__(self, ground_truth_data, system_output_data,
                  gt_svg_path=None, sys_svg_path=None):
         self.gt_raw = ground_truth_data
         self.sys_out = system_output_data
-        self.sys_violations = system_violations
         self.gt_svg_path = gt_svg_path      # 可选：GT SVG 路径，用于几何验证
         self.sys_svg_path = sys_svg_path    # 可选：系统输入 SVG 路径，用于几何验证
 
@@ -21,7 +19,6 @@ class PipelineEvaluator:
         self.sys_nodes = {}
         self.gt_rooms = {}
         self.gt_edges = set()
-        self.gt_violations = []
 
         # 核心映射字典：用于存储系统生成的 ID 与真实标注 ID 之间的对应关系
         self.sys_to_gt_map = {}
@@ -32,7 +29,6 @@ class PipelineEvaluator:
         self.iou_scores = []
         self.gt_status = {}
         self.topo_counts = (0, 0, 0)
-        self.compliance_counts = (0, 0, 0)
         self.area_errors = []
         self.width_errors = []
         self.y_true = []
@@ -147,14 +143,12 @@ class PipelineEvaluator:
                         adj_id = adj.get("@id") if isinstance(adj, dict) else adj
                         self.gt_edges.add(tuple(sorted([node_id, adj_id])))
 
-            self.gt_violations = self.gt_raw.get("violations", [])
         else:
             # 兼容旧版简化草稿格式
             self.gt_rooms = self.gt_raw.get("rooms", {})
             for edge in self.gt_raw.get("adjacencies", []):
                 if len(edge) == 2:
                     self.gt_edges.add(tuple(sorted([edge[0], edge[1]])))
-            self.gt_violations = self.gt_raw.get("violations", [])
 
     # ==========================================
     # SVG 几何提取：从 SVG 文件中提取房间多边形
@@ -643,56 +637,11 @@ class PipelineEvaluator:
 
         return acc, f1
 
-    # ==========================================
-    # Exp 5: SHACL Compliance Checking
-    # ==========================================
-    def evaluate_compliance_checking(self):
-        print("\n" + "=" * 50)
-        print("⚖️ [Exp 5] SHACL Compliance Checking")
-        print("=" * 50)
-
-        def _norm_node(node_id):
-            """Normalize a node id (strip inst: prefix) so GT / system align."""
-            return node_id.replace("inst:", "") if isinstance(node_id, str) else node_id
-
-        def _rule_code(v):
-            """Extract the violation rule code from the message, e.g. 【违规 4.1.1】 -> 4.1.1."""
-            match = re.search(r'【违规 ([\d\.]+)】', v.get("message", ""))
-            return match.group(1) if match else "Unknown"
-
-        gt_set = set((_norm_node(v["node_id"]), _rule_code(v)) for v in self.gt_violations)
-
-        sys_set = set()
-        for v in self.sys_violations:
-            sys_node_id = v["node_id"]
-            gt_node_id = self.sys_to_gt_map.get(sys_node_id, sys_node_id)
-            sys_set.add((_norm_node(gt_node_id), _rule_code(v)))
-
-        true_positives = len(gt_set.intersection(sys_set))
-        false_positives = len(sys_set - gt_set)
-        false_negatives = len(gt_set - sys_set)
-
-        self.compliance_counts = (true_positives, false_positives, false_negatives)
-
-        precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0
-        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0
-        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-
-        print(f"  [+] GT total violations: {len(gt_set)}")
-        print(f"  [+] System alerts: {len(sys_set)}")
-        print(f"  [+] True Positives: {true_positives} | False Positives: {false_positives} | False Negatives: {false_negatives}")
-        print("-" * 30)
-        print(f"  [+] Precision: {precision * 100:.2f}%")
-        print(f"  [+] Recall: {recall * 100:.2f}%")
-        print(f"  [+] F1-Score: {f1 * 100:.2f}%")
-        return precision, recall, f1
-
     def run_all(self):
         self.evaluate_geometry_extraction()
         self.evaluate_topological_similarity()
         self.evaluate_geometric_computation()
         self.evaluate_semantic_enrichment()
-        self.evaluate_compliance_checking()
         print("\n🎉 All experiments complete! Results ready for paper tables.")
 
     # ==========================================
@@ -721,11 +670,6 @@ class PipelineEvaluator:
             self.evaluate_semantic_enrichment()
         return self.y_true, self.y_pred
 
-    def get_compliance_raw_counts(self):
-        if sum(self.compliance_counts) == 0:
-            self.evaluate_compliance_checking()
-        return self.compliance_counts
-
 
 # =====================================================================
 # CLI 入口：单文件评估（从配置文件读取路径）
@@ -740,7 +684,6 @@ if __name__ == "__main__":
     sys_jsonld_path = settings.eval_sys_jsonld
     gt_svg_path = settings.eval_gt_svg
     sys_svg_path = settings.eval_sys_svg
-    violations_path = settings.eval_violations_json
 
     # 2. 检查必填路径
     missing = []
@@ -758,8 +701,7 @@ if __name__ == "__main__":
     gt_jsonld: "output/gt/sample_gt.jsonld"
     sys_jsonld: "output/jsonld/sample.jsonld"
     gt_svg: "output/processed/sample_gt.svg"    # optional
-    sys_svg: "input_data/svg/sample.svg"              # optional
-    violations_json: "output/violations/sample_violations.json"  # optional''')
+    sys_svg: "input_data/svg/sample.svg"              # optional''')
         sys.exit(1)
 
     # 3. Load ground truth
@@ -772,28 +714,18 @@ if __name__ == "__main__":
         system_output_data = json.load(f)
     print(f"  [+] Loaded system JSON-LD from: {sys_jsonld_path}")
 
-    # 5. Load system violations (optional)
-    system_violations = []
-    if violations_path and os.path.exists(str(violations_path)):
-        with open(str(violations_path), "r", encoding="utf-8") as f:
-            system_violations = json.load(f)
-        print(f"  [+] Loaded violations from: {violations_path}")
-    else:
-        print(f"  [-] Violations file not configured or not found, using empty list.")
-
-    # 6. Summary
+    # 5. Summary
     print("=" * 50)
     print("📋 Evaluation Configuration:")
     print(f"  - GT JSON-LD:      {gt_jsonld_path}")
     print(f"  - System JSON-LD:  {sys_jsonld_path}")
     print(f"  - GT SVG:          {gt_svg_path or '(not provided)'}")
     print(f"  - System SVG:      {sys_svg_path or '(not provided)'}")
-    print(f"  - Violations:      {violations_path or '(not provided)'}")
     print("=" * 50)
 
-    # 7. Run evaluation
+    # 6. Run evaluation
     evaluator = PipelineEvaluator(
-        ground_truth_data, system_output_data, system_violations,
+        ground_truth_data, system_output_data,
         gt_svg_path=str(gt_svg_path) if gt_svg_path else None,
         sys_svg_path=str(sys_svg_path) if sys_svg_path else None,
     )

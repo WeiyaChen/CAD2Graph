@@ -65,6 +65,18 @@ class ISpaceTypeClassifier(ABC):
     #: 注册到 :data:`src.spatial.registry.SPACE_TYPE_CLASSIFIERS` 时使用的算法名。
     name: str = "unknown"
 
+    #: 该算法是否**自带复合空间分割/聚合**（ACD）能力。
+    #:
+    #: 这是 ``LLMMultiStage`` 方法的一个创新点：当一个空间被判了多个建筑语义标签
+    #: （例如 LivingRoom + DiningRoom 共处一个开放区）时，用近似凸分解把它切开。
+    #:
+    #: ⚠️ **公平比较原则**：没有这个能力的算法（如 ``SAGEE`` 单标签分类器、
+    #: ``TextMatching``）**不要**用后处理去模拟它 —— 两边都用自己的完整能力
+    #: 才是公平的比较。因此能力由方法自己声明，流水线不再按名字硬编码：
+    #: :class:`~src.enricher.enricher_pipeline.GraphEnrichmentPipeline` 读这个字段
+    #: 决定要不要跑 ACD。
+    supports_composite_split: bool = False
+
     @abstractmethod
     def classify(
         self,

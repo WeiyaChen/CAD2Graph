@@ -131,7 +131,7 @@ class GeometryEnricher:
             if "bot:Space" in types:
                 node["props:hasArea"] = area
 
-                # 根据语义区分属性命名，匹配 SHACL 规则接口要求
+                # 根据语义区分属性命名
                 is_corridor = any("Corridor" in t for t in types)
                 if is_corridor:
                     node["props:clearWidth"] = width  # 过道通行净宽
