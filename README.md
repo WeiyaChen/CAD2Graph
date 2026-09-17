@@ -747,7 +747,7 @@ Evaluation lives behind two scripts and **one document**:
 
 ```bash
 python scripts/run_benchmark.py --status          # where am I
-python scripts/run_benchmark.py                   # run the 6 incomplete runs
+python scripts/run_benchmark.py                   # run the 15 incomplete runs
 python scripts/evaluate_benchmark.py --out-json output/bench/scores.json
 ```
 
@@ -795,9 +795,21 @@ per-class F1 breakdown are in [docs/benchmark_protocol.md](docs/benchmark_protoc
 
 | Task 2 · type (on GT contours) | accuracy | coverage | MacroF1 | WeightedF1 |
 | --- | ---: | ---: | ---: | ---: |
-| `LLMMultiStage` | 0.731 | 0.902 | **0.699** | **0.778** |
-| `SAGEE` (out-of-fold) | **0.755** | **0.999** | 0.566 | 0.732 |
+| `LLMMultiStage` | 0.677 | 0.825 | **0.637** | 0.731 |
+| `SAGEE` (out-of-fold) | **0.755** | **0.999** | 0.566 | **0.732** |
 | `TextMatching` | 0.449 | 0.469 | 0.429 | 0.532 |
+
+| End-to-end (`e2e_<contour>_<classifier>`) | 轮廓覆盖 | 条件准确率 | accuracy | MacroF1 |
+| --- | ---: | ---: | ---: | ---: |
+| `CDT` + `LLMMultiStage` | 0.704 | 0.736 | **0.518** | **0.498** |
+| `RGP` + `LLMMultiStage` | **0.722** | 0.714 | 0.516 | 0.518 |
+| **`RGP` + `SAGEE`** | 0.656 | **0.761** | **0.500** | 0.330 |
+| `CDT` + `SAGEE` | 0.548 | 0.637 | 0.349 | 0.223 |
+| `RGP` + `TextMatching` | 0.656 | 0.465 | 0.305 | 0.307 |
+| `CDT` + `TextMatching` | 0.548 | 0.469 | 0.257 | 0.232 |
+| `VecFloorSeg` + `LLMMultiStage` | 0.089 | 0.341 | 0.030 | 0.026 |
+| `VecFloorSeg` + `SAGEE` | 0.013 | 0.333 | 0.004 | 0.003 |
+| `VecFloorSeg` + `TextMatching` | 0.013 | 0.250 | 0.003 | 0.007 |
 
 CDT and RGP are a **trade-off, not a ranking**: CDT gets the shapes right (mIoU +10.6
 points) while RGP finds more of the rooms (coverage +10.9 points, one-to-one +6.2). Which
@@ -805,6 +817,20 @@ one to pick depends on whether the downstream stage fears *missing a space* or *
 shape wrong*. Likewise, `SAGEE` wins on accuracy but loses on macro-F1 because it is weak
 on rare classes, while `LLMMultiStage` is the other way round — they are complementary,
 not competing.
+
+In the cascade, **`RGP` + `SAGEE` is the best value pick**: 0.500 against 0.518 for the
+top cell, without any LLM (local numpy forward pass, no API cost, offline). And note that
+contour coverage in the end-to-end table is **not** a pure contour property — under `CDT`,
+`LLMMultiStage` reaches 0.704 where `SAGEE`/`TextMatching` reach 0.548, because ACD
+composite-space splitting recovers GT spaces that CDT's over-merging had swallowed. See
+[docs/benchmark_protocol.md](docs/benchmark_protocol.md) §7.4.
+
+> ⚠️ **`glm-4.5-air` → `deepseek-flash`.** The `LLMMultiStage` row above is the deepseek
+> run. With the earlier glm-4.5-air model the same row read `0.731 / 0.902 / 0.699 / 0.778`
+> — 10–15× slower and more expensive, but 5.4 points more accurate with far fewer
+> abstentions (187 vs 336). The old artefacts are kept in
+> `output/bench/_archive_type_LLMMultiStage_glm/` (the `_archive_` prefix hides it from the
+> evaluator). **Always quote the model name with an LLM number.**
 
 #### Secondary harnesses
 
@@ -911,8 +937,9 @@ The main entry point supports the following modes, configurable via the settings
 
 ### Benchmark
 
-- `scripts/run_benchmark.py` — run the 6-run benchmark matrix into `output/bench/<run>/`.
-  `--status` shows coverage per directory, `--dry-run` shows the plan, `--task contour|type`
+- `scripts/run_benchmark.py` — run the 15-run benchmark matrix into `output/bench/<run>/`
+  (3 contour + 3 type + 9 end-to-end, each 39 drawings).
+  `--status` shows coverage per directory, `--dry-run` shows the plan, `--task contour|type|e2e`
   and `--run NAME` narrow it down, `--force` re-runs a complete run.
 - `scripts/evaluate_benchmark.py` — evaluate the matrix into `output/bench/scores.json`.
   Discovers runs by directory prefix, emits per-drawing and aggregate metrics plus a

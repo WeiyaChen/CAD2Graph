@@ -226,7 +226,8 @@
     let h = '<table class="tbl"><thead><tr><th>轮廓算法</th><th>图纸</th>' + cols.map(c => '<th>' + c[0] + '</th>').join('') + '</tr></thead><tbody>';
     all.forEach(m => {
       const ref = order.indexOf(m);
-      const partial = (t1[m].n_drawings || 0) < full;
+      // GT(自检) 天然只有 39 张（基准集不含 sample），不能按「未跑完」标黄
+      const partial = ref >= 0 && (t1[m].n_drawings || 0) < full;
       h += '<tr' + (partial ? ' class="partial"' : '') + '><td>' + esc(m) + (ref < 0 ? '（参照，不参评）' : '') + '</td>'
         + '<td class="' + (partial ? '' : 'dim') + '">' + (t1[m].n_drawings || 0) + '/' + full + '</td>'
         + cols.map((c, j) => {

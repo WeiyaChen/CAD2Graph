@@ -50,8 +50,10 @@
 
     <a class="card" href="exp_analysis.html">
       <span class="tag purple">Category 2 · Drawing Analysis</span>
-      <h2>System vs GT Comparison</h2>
-      <p>Input a single DXF file and view the system result and the Ground Truth result side by side on screen.</p>
+      <h2>Per-Drawing Algorithm Comparison</h2>
+      <p>Pick a single DXF and see <b>every</b> contour algorithm and classifier on that drawing
+      (task 1 · contour, task 2 · type, then System vs GT) — no algorithm dropdown, the top bar
+      runs the whole plan and shows a zoomable image per algorithm plus each method's knowledge graph.</p>
     </a>
 
     <a class="card" href="kg_browser.html">
@@ -62,8 +64,11 @@
 
     <a class="card" href="overall_report.html">
       <span class="tag teal">Evaluation Overview</span>
-      <h2>overall_results Visualization</h2>
-      <p>Core experiments (geometry / topology / geometric computation / semantic reasoning) grouped together.</p>
+      <h2>End-to-End Benchmark Matrix</h2>
+      <p>The 3 × 3 product of <i>task-1 contour algorithms</i> × <i>task-2 classifiers</i>, where
+      task 2 runs on whatever task 1 produced. Shows the accuracy matrix, the
+      <code>轮廓覆盖 × 条件准确率</code> decomposition, the two single-task reference tables and
+      per-class F1. Reads <code>output/bench/scores.json</code>.</p>
     </a>
 
     <a class="card" href="manual.html">

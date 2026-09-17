@@ -1,6 +1,8 @@
 # VecFloorSeg 适配层设计（CAD2Graph → 房间轮廓）
 
-> 状态：**设计已定稿，代码实现中**。本文档记录的是**经源码逐行验证**的事实，不是推测。
+> 状态：**已全部实现并已进入基准矩阵**（阶段 A–D 完成；阶段 E 拿到了实测数字，结论是
+> "权重欠训练"而不是适配层有问题，见 §5 与 §6.5）。
+> 本文档记录的是**经源码逐行验证**的事实，不是推测。
 > 相关：`docs/vecfloorseg_baseline_plan.md`（环境/训练方案 §7–§11）、`scripts/setup_vecfloorseg_server.sh`。
 
 ---
@@ -144,7 +146,7 @@ CAD2Graph (cadruler)
 | **B** | `runner.py`（临时数据集 + `--eval` 子进程 + 读 `val_result.pkl`） | 用本地 1-epoch ckpt 跑出 400 维预测 | ✅ 已完成 |
 | **C** | `postprocess.py`（pred+merge2tri+三角形表 → mm 多边形） | 在作者 CUBI 样本上叠加可视化，形状合理 | ✅ 已完成 |
 | **D** | `contours/vecfloorseg.py` + 注册 + `settings.yaml` | `spatial.contour.algorithm: VecFloorSeg` 走通，产出 `<drawing>_vecfloorseg.png` | ✅ 已完成 |
-| **E** | 精度调优（图像外观、画布留白比例、门窗槽位、`extendCornerWall` 参数） | 与 CDT/RGP 横向对比 | ⏳ 等真权重 |
+| **E** | 精度调优（图像外观、画布留白比例、门窗槽位、`extendCornerWall` 参数） | 与 CDT/RGP 横向对比 | ⚠️ 已对比，**数字很差，根因是权重欠训练**（§6.5） |
 
 > ⚠️ **前置依赖**：`build_dataset.py` 需要 `triangle`（`tr.triangulate`）。服务器上的 `setup_vecfloorseg_server.sh` 默认**不装**它（它只在 `--with-preproc-deps` 里）——适配层跑之前要补：`pip install -i <mirror> "triangle==20220202"`。
 
@@ -180,6 +182,25 @@ CAD2Graph (cadruler)
 `scripts/check_vecfloorseg_config.py` 做 8 项静态自检（注册表 / settings.yaml / 工厂实例化 / 机器路径存在性 / 参数 / 可视化 4 元组 / 共享过滤器 / `algorithm_params` 合并），秒级返回。
 
 **自检发现并修复的一个真 bug**：`algorithm_params.<NAME>` 原先只在 `settings.yaml` 的 `algorithm:` 选中该算法时才合并；从 CLI / Web UI 运行期参数覆盖算法名时，那一组专属参数会被**静默忽略**（`RGP` 一直中招）。已改为按**最终**算法名调 `SpatialPipelineConfig.contour_params_for()` / `classifier_params_for()` 取参，自检第 8 项专门守护这个行为。
+
+### 6.5 基准矩阵实测结果（39 张图）
+
+适配层已接入 `docs/benchmark_protocol.md` 的三层矩阵：
+
+| 口径 | 结果 |
+|---|---|
+| 任务 1 · 轮廓（`contour_VecFloorSeg`） | 65 个空间 · 数量比 0.034 · 覆盖率 **0.013** · 一对一率 0.000 · mIoU 0.074 |
+| 端到端最好的一格（`VecFloorSeg + LLMMultiStage`） | **0.030** |
+
+对比 `CDT` 0.547 / `RGP` 0.656 的覆盖率，这一行基本是空的。
+
+**根因是权重，不是适配层。** `best1.ckpt` 的 `best` 落在 **epoch 1**：1291 个 region
+收敛成 1 条轮廓（标签分布 `0=1083, 3=2, 11=206`，房间类命中率 16.1%）。用本地
+`0.ckpt` 做对照（`0=1126, 2=165`，房间类命中率 0.0%）得到 **0 条轮廓** ——
+两者行为一致地"跟着权重走"，证明**管线是通的，是权重欠训练**。
+
+→ 下一步是**按论文配方重训到收敛**（`max_epoch 200`，见
+`docs/vecfloorseg_baseline_plan.md` §10.4），而不是继续调适配层。
 
 ## 7. 已知风险
 
